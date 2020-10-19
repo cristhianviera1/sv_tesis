@@ -2,29 +2,20 @@ import { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { v4 as uuid4 } from 'uuid';
 import { generateUnixTimestamp } from '../../../utils/generateUnixTimestamp';
-import { Address } from '../../addresses/address.model';
-import { Product } from '../../products/product.model';
-import { User } from '../../users/schemas/user.schema';
 
 @Schema()
-export class BranchOffice extends Document {
+export class Newness extends Document {
   @Prop({ default: () => uuid4() })
   _id: string;
 
   @Prop({ required: true })
-  name: string;
+  title: string;
 
   @Prop({ required: true })
-  address: Address;
+  description: string;
 
-  @Prop()
-  products: Product[];
-
-  @Prop({ required: true, default: () => false })
-  status?: boolean;
-
-  @Prop()
-  employees?: User[];
+  @Prop({ required: true })
+  image: string;
 
   @Prop({
     type: 'number',
@@ -42,13 +33,7 @@ export class BranchOffice extends Document {
     type: 'number',
   })
   deleted_at: number;
-
-  constructor() {
-    super();
-    this.products = [];
-    this.employees = [];
-  }
 }
 
-export const BranchOfficeSchema = SchemaFactory.createForClass(BranchOffice);
+export const NewnessSchema = SchemaFactory.createForClass(Newness);
 

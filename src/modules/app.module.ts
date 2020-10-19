@@ -9,16 +9,22 @@ import { ConfigModule } from '@nestjs/config';
 import { BranchOfficesModule } from './branch-offices/branch-offices.module';
 import { AuthModule } from './auth/auth.module';
 import { CountriesModule } from './countries/countries.module';
+import { EmployeesModule } from './employees/employees.module';
+import { NewnessModule } from './newnesses/newness.module';
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     UsersModule,
-    MongooseModule.forRoot(`mongodb://localhost/tesis`),
-    AccessControlModule.forRoles(roles),
+    MongooseModule.forRoot(`mongodb://localhost/delivery`),
     BranchOfficesModule,
     AuthModule,
     CountriesModule,
+    AccessControlModule.forRoles(roles),
+    EmployeesModule,
+    NewnessModule,
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

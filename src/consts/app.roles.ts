@@ -5,10 +5,10 @@ export const roles: RolesBuilder = new RolesBuilder();
 
 roles
   .grant(UserTypeEnum.ADMIN)
-  .createAny(['users'])
-  .deleteAny(['users'])
-  .readAny(['users'])
-  .updateAny(['users'])
+  .createAny(['users', 'branchOffices', 'employees', 'newness'])
+  .deleteAny(['users', 'branchOffices', 'employees', 'newness'])
+  .readAny(['users', 'branchOffices', 'employees', 'newness'])
+  .updateAny(['users', 'branchOffices', 'employees', 'newness'])
 
   .grant(UserTypeEnum.BRANCH_ADMIN)
   .updateOwn(['users'])
