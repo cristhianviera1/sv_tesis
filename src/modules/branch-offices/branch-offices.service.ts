@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { BranchOffice } from './schema/branch-office.schema';
 import CreateBranchOfficeDto from './dto/create-branch-office.dto';
 import { generateUnixTimestamp } from '../../utils/generateUnixTimestamp';
@@ -12,7 +12,8 @@ export class BranchOfficesService {
   }
 
 
-  create(createBranchOffice: CreateBranchOfficeDto): Promise<BranchOffice> {
+  async create(createBranchOffice: CreateBranchOfficeDto): Promise<BranchOffice> {
+    await this.findIfExist({ $or: [{ email: createBranchOffice.email }, { name: createBranchOffice.name }] }, 'nombre o correo');
     const createdBranch = new this.branchOffice(createBranchOffice);
     return createdBranch.save();
   }
@@ -39,19 +40,24 @@ export class BranchOfficesService {
     return branchOffice.save();
   }
 
-  async findIfExist(branchOffice: UpdateBranchOfficeDto) {
+  async findIfExist(conditions: FilterQuery<BranchOffice>, propName: string) {
     const existBranch = await this.branchOffice.findOne({
-      $or: [{ name: branchOffice.name }, { email: branchOffice.email }],
+      ...conditions,
       deleted_at: null,
     });
     if (existBranch) {
-      throw new ConflictException('Ya existe una sucursal con el mismo nombre o email');
+      throw new ConflictException(`Ya existe una sucursal con ese ${propName}`);
     }
   }
 
   async update(updateBranchOffice: UpdateBranchOfficeDto) {
     const branchOffice = await this.find(updateBranchOffice._id);
-    await this.findIfExist(updateBranchOffice);
+    if (branchOffice.name !== updateBranchOffice.name) {
+      await this.findIfExist({ name: updateBranchOffice.name }, 'nombre');
+    }
+    if (branchOffice.email !== updateBranchOffice.email) {
+      await this.findIfExist({ email: updateBranchOffice.email }, 'email');
+    }
     branchOffice.name = updateBranchOffice.name;
     branchOffice.email = updateBranchOffice.email;
     branchOffice.address = updateBranchOffice.address;

@@ -74,7 +74,7 @@ export class BranchOfficesController {
     possession: 'any',
   })
   @Put('/status/:id')
-  changeStatus(@Body(ValidationPipe) toggle_status: boolean, @Param('id') id: string) {
+  changeStatus(@Body(ValidationPipe) { toggle_status }: { toggle_status: boolean }, @Param('id') id: string) {
     return this.branchOfficeService.updateStatus(toggle_status, id);
   }
 }

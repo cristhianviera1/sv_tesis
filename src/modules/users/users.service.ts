@@ -47,9 +47,10 @@ export class UsersService {
     return false;
   }
 
-  getSafeParameters(user: User) {
+  //TODO el usuario debería tener el tipo del schema.
+  getSafeParameters(user: any) {
     return {
-      ...user,
+      ...user.toObject(),
       devices: undefined,
       type: undefined,
       password: undefined,

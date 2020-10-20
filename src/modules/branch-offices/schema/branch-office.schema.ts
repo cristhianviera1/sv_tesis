@@ -17,6 +17,9 @@ export class BranchOffice extends Document {
   @Prop({ required: true })
   address: Address;
 
+  @Prop({ required: true })
+  email: string;
+
   @Prop()
   products: Product[];
 

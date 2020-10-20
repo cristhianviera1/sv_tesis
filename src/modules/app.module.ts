@@ -17,7 +17,7 @@ import { ProductsModule } from './products/products.module';
   imports: [
     ConfigModule.forRoot(),
     UsersModule,
-    MongooseModule.forRoot(`mongodb://localhost/delivery`),
+    MongooseModule.forRoot(`mongodb://${process.env.APP_DBUSERNAME}:${process.env.APP_DBPASSWORD}@${process.env.APP_DBHOST}/${process.env.APP_DBNAME}?authSource=admin`),
     BranchOfficesModule,
     AuthModule,
     CountriesModule,
