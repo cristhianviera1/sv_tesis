@@ -1,4 +1,4 @@
-import moment from "moment";
+import * as moment from 'moment';
 
 export const generateUnixTimestamp = () => moment().unix();
-export const convertToUnixTimestamp = (date: number) => moment(date).unix()
+export const convertToUnixTimestamp = (date: number) => moment(date).unix();
