@@ -8,16 +8,23 @@ import UpdateNewnessDto from './dto/update-newness.dto';
 
 @Injectable()
 export class NewnessService {
-  constructor(@InjectModel(Newness.name) private newness: Model<Newness>) {
+  constructor(@InjectModel(Newness.name) private newnessModel: Model<Newness>) {
   }
 
   async create(createNewnessDto: CreateNewnessDto) {
-    const createdNewness = new this.newness(createNewnessDto);
+    const newness = new CreateNewnessDto(
+      createNewnessDto.title,
+      createNewnessDto.description,
+      createNewnessDto.image,
+      generateUnixTimestamp(),
+      generateUnixTimestamp(),
+    );
+    const createdNewness = await this.newnessModel.create(newness);
     return createdNewness.save();
   }
 
   async find(id: string) {
-    const newness = await this.newness.findOne({ _id: id, deleted_at: null });
+    const newness = await this.newnessModel.findOne({ _id: id, deleted_at: null });
     if (!newness) {
       throw new NotFoundException('No se encontró la novedad');
     }
@@ -25,7 +32,7 @@ export class NewnessService {
   }
 
   async list() {
-    const newnesses = await this.newness.find({ deleted_at: null }).sort({ created_at: -1 });
+    const newnesses = await this.newnessModel.find({ deleted_at: null }).sort({ created_at: -1 });
     if (newnesses?.length < 1) {
       throw new NotFoundException('No se han encontrado novedades');
     }
