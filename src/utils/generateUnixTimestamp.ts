@@ -1,2 +1,4 @@
-export const generateUnixTimestamp = () => Math.floor(Date.now() / 1000);
-export const convertToUnixTimestamp = (date: number) => Math.floor(date / 1000);
+import moment from "moment";
+
+export const generateUnixTimestamp = () => moment().unix();
+export const convertToUnixTimestamp = (date: number) => moment(date).unix()

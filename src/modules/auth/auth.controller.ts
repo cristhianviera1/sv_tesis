@@ -57,7 +57,6 @@ export class AuthController {
           createClientUserDto.phone,
           createClientUserDto.email.toLowerCase(),
           createClientUserDto.status = true,
-          createClientUserDto.device,
         );
 
         client.roles = UserTypeEnum.CLIENT;
