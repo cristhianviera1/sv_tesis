@@ -10,6 +10,7 @@ export interface CreateUserDto {
   status?: boolean;
   devices?: string;
   roles: UserType;
+  gender: UserGender;
   addresses?: Address;
 }
 

@@ -9,6 +9,9 @@ export class User extends Document {
   @Prop({ default: () => uuid4() })
   _id: string;
 
+  @Prop()
+  dni: string;
+
   @Prop({ required: true })
   name: string;
 

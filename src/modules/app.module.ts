@@ -12,6 +12,7 @@ import { CountriesModule } from './countries/countries.module';
 import { EmployeesModule } from './employees/employees.module';
 import { NewnessModule } from './newnesses/newness.module';
 import { ProductsModule } from './products/products.module';
+import { ChatsGateway } from './chats/chats.gateway';
 
 @Module({
   imports: [
@@ -25,9 +26,10 @@ import { ProductsModule } from './products/products.module';
     EmployeesModule,
     NewnessModule,
     ProductsModule,
+    //ChatsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ChatsGateway],
 })
 export class AppModule {
 }

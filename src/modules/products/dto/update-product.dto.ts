@@ -1,7 +1,10 @@
 import { IsNotEmpty } from 'class-validator';
 import { Category } from '../product.model';
 
-export default class CreateProductDto {
+export default class UpdateProductDto{
+  @IsNotEmpty()
+  _id: string;
+
   @IsNotEmpty()
   name: string;
 
@@ -18,4 +21,7 @@ export default class CreateProductDto {
 
   @IsNotEmpty()
   image: string;
+
+  @IsNotEmpty()
+  status: boolean;
 }

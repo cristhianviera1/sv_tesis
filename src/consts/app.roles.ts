@@ -11,9 +11,9 @@ roles
   .updateAny(['users', 'branchOffices', 'employees', 'newness'])
 
   .grant(UserTypeEnum.BRANCH_ADMIN)
-  .updateOwn(['users'])
-  .readOwn(['users'])
-  .deleteOwn(['users'])
+  .updateOwn(['users','branchOffices','products'])
+  .readOwn(['users','branchOffices','products'])
+  .deleteOwn(['users','branchOffices','products'])
 
   .grant(UserTypeEnum.BRIGADISTA)
   .createOwn(['users'])

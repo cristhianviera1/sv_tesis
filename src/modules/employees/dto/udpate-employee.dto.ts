@@ -1,5 +1,6 @@
 import { IsEmail, IsNotEmpty, IsPhoneNumber } from 'class-validator';
 import { v4 as uuid4 } from 'uuid';
+import { UserGender } from '../../users/dto/create-user.dto';
 
 export default class UpdateEmployeeDto {
   @IsNotEmpty()
@@ -10,6 +11,9 @@ export default class UpdateEmployeeDto {
 
   @IsNotEmpty()
   name: string;
+
+  @IsNotEmpty()
+  gender: UserGender;
 
   @IsNotEmpty()
   @IsPhoneNumber('EC', { message: 'El numero celular es invalido' })

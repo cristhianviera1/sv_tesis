@@ -26,6 +26,14 @@ export class BranchOfficesService {
     return branchOffice;
   }
 
+  async findWithEmployee(id: string) {
+    const branchOffice = await this.branchOffice.findOne({ 'employees._id': id, deleted_at: null });
+    if (!branchOffice) {
+      throw new NotFoundException('No se ha encontrado una sucursal asociada al usuario');
+    }
+    return branchOffice;
+  }
+
   async list() {
     const branchOffices = await this.branchOffice.find({ deleted_at: null });
     if (branchOffices?.length < 1) {
@@ -71,5 +79,14 @@ export class BranchOfficesService {
     return branchOffice.save();
   }
 
+  getSafeParameteres(branchOffice: BranchOffice): BranchOffice {
+    return {
+      ...branchOffice.toObject(),
+      employees: null,
+      created_at: undefined,
+      updated_at: undefined,
+      deleted_at: undefined,
+    };
+  }
 
 }

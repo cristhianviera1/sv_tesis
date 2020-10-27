@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { User } from './schemas/user.schema';
@@ -18,8 +18,12 @@ export class UsersService {
     return this.user.findOne({ email });
   }
 
-  findOne(conditions: FilterQuery<User>) {
-    return this.user.findOne(conditions);
+  async findOne(conditions: FilterQuery<User>): Promise<User> {
+    const user = await this.user.findOne(conditions);
+    if (!user) {
+      throw new NotFoundException('No se ha encontrado el usuario');
+    }
+    return user;
   }
 
   deleteMany(conditions: FilterQuery<User>) {
@@ -47,8 +51,7 @@ export class UsersService {
     return false;
   }
 
-  //TODO el usuario debería tener el tipo del schema.
-  getSafeParameters(user: any) {
+  getSafeParameters(user: User) {
     return {
       ...user.toObject(),
       devices: undefined,

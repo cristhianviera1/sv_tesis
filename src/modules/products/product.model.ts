@@ -4,7 +4,7 @@ export class Product {
   _id: string;
   name: string;
   stock: number;
-  category: string[];
+  category: Category[];
   price: number;
   detail: string;
   image: string;
@@ -13,7 +13,7 @@ export class Product {
   updated_at: number;
   deleted_at?: number;
 
-  constructor(name: string, stock: number, category: string[], price: number, detail: string, image: string, status: boolean, created_at: number, updated_at: number, deleted_at?: number) {
+  constructor(name: string, stock: number, category: Category[], price: number, detail: string, image: string, status: boolean, created_at: number, updated_at: number, deleted_at?: number) {
     this._id = uuid4();
     this.name = name;
     this.stock = stock;
@@ -25,5 +25,15 @@ export class Product {
     this.created_at = created_at;
     this.updated_at = updated_at;
     this.deleted_at = deleted_at;
+  }
+}
+
+export class Category {
+  _id: string;
+  name: string;
+
+  constructor(name: string) {
+    this._id = uuid4();
+    this.name = name;
   }
 }

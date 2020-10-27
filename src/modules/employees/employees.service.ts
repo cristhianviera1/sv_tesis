@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../users/schemas/user.schema';
 import { Model } from 'mongoose';
@@ -7,11 +7,13 @@ import CreateEmployeeUserDto from './dto/create-employee.dto';
 import { UserTypeEnum } from '../users/dto/create-user.dto';
 import { generateUnixTimestamp } from '../../utils/generateUnixTimestamp';
 import { BranchOffice } from '../branch-offices/schema/branch-office.schema';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class EmployeesService {
   constructor(
     @InjectModel(User.name) private employeeModel: Model<User>,
+    private readonly usersService: UsersService,
   ) {
   }
 
@@ -22,6 +24,7 @@ export class EmployeesService {
         createEmployeeDto.dni,
         createEmployeeDto.name,
         createEmployeeDto.surname,
+        createEmployeeDto.gender,
         createEmployeeDto.password,
         createEmployeeDto.phone,
         createEmployeeDto.email,
@@ -66,7 +69,7 @@ export class EmployeesService {
   }
 
   async delete(branchOffice: BranchOffice, employee_id: string) {
-    /*const employee = branchOffice.employees.find((user) => {
+    const employee = branchOffice.employees.find((user) => {
       if (user._id === employee_id) {
         return user;
       }
@@ -84,6 +87,25 @@ export class EmployeesService {
     }
     await this.employeeModel.findByIdAndDelete(employee._id);
     branchOffice.employees.splice(employeeIndex, 1);
-    return branchOffice.save();*/
+    await branchOffice.save();
+    return branchOffice;
+  }
+
+  async update(updateEmployeeDto: UpdateEmployeeDto, branchOffice: BranchOffice) {
+    const employeeIndex = branchOffice.employees.findIndex((employee) => employee._id == updateEmployeeDto._id);
+    await this.findIfExist(updateEmployeeDto);
+    if (employeeIndex == -1) {
+      throw new NotFoundException('No se ha encontrado el usuario en el negocio');
+    }
+    const employee = await this.usersService.findOne({ _id: updateEmployeeDto._id });
+    employee.dni = updateEmployeeDto.dni;
+    employee.name = updateEmployeeDto.name;
+    employee.gender = updateEmployeeDto.gender;
+    employee.phone = updateEmployeeDto.phone;
+    employee.email = updateEmployeeDto.email;
+    branchOffice.employees[employeeIndex] = this.usersService.getSafeParameters(employee);
+    branchOffice.markModified('employees');
+    await employee.save();
+    return employee;
   }
 }

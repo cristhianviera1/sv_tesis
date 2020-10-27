@@ -19,7 +19,7 @@ export class BranchOfficesController {
     possession: 'any',
   })
   @Post()
-  create(@Body(ValidationPipe) createBranchOfficeDto: CreateBranchOfficeDto, @Req() req) {
+  create(@Body(ValidationPipe) createBranchOfficeDto: CreateBranchOfficeDto) {
     return this.branchOfficeService.create(createBranchOfficeDto);
   }
 
@@ -40,7 +40,7 @@ export class BranchOfficesController {
     action: 'read',
     possession: 'any',
   })
-  @Get('/:id')
+  @Get('id/:id')
   find(@Param('id') id: string) {
     return this.branchOfficeService.find(id);
   }
@@ -76,5 +76,17 @@ export class BranchOfficesController {
   @Put('/status/:id')
   changeStatus(@Body(ValidationPipe) { toggle_status }: { toggle_status: boolean }, @Param('id') id: string) {
     return this.branchOfficeService.updateStatus(toggle_status, id);
+  }
+
+  @UseGuards(JwtAuthGuard, ACGuard)
+  @UseRoles({
+    resource: 'branchOffices',
+    action: 'read',
+    possession: 'own',
+  })
+  @Get('/own')
+  async findWithEmployee(@Req() req) {
+    const branchOffice = await this.branchOfficeService.findWithEmployee(req?.user?._id);
+    return this.branchOfficeService.getSafeParameteres(branchOffice);
   }
 }
