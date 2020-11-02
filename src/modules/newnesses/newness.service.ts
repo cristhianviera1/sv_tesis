@@ -16,8 +16,6 @@ export class NewnessService {
       createNewnessDto.title,
       createNewnessDto.description,
       createNewnessDto.image,
-      generateUnixTimestamp(),
-      generateUnixTimestamp(),
     );
     const createdNewness = await this.newnessModel.create(newness);
     return createdNewness.save();

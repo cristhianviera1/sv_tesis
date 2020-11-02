@@ -3,6 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { User } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
+import UpdateUserDto from './dto/update-user.dto';
+import { generateUnixTimestamp } from '../../utils/generateUnixTimestamp';
 
 @Injectable()
 export class UsersService {
@@ -51,13 +53,48 @@ export class UsersService {
     return false;
   }
 
+  async list() {
+    const users = await this.user.find();
+    if (!users) {
+      throw new NotFoundException('No se han encontrado usuarios');
+    }
+    return users.map((user) => ({ ...this.getSafeParameters(user) }));
+  }
+
+  async update(updateUserDto: UpdateUserDto) {
+    const user = await this.findOne({ _id: updateUserDto.user_id });
+    if (!user) {
+      throw new NotFoundException('No se ha encontrado el usuario especificado');
+    }
+    user.dni = updateUserDto.dni;
+    user.name = updateUserDto.name;
+    user.surname = updateUserDto.surname;
+    user.password = updateUserDto.password;
+    user.phone = updateUserDto.phone;
+    user.email = updateUserDto.email;
+    user.status = updateUserDto.status;
+    user.roles = updateUserDto.roles;
+    user.gender = updateUserDto.gender;
+    user.birthday = updateUserDto.birthday;
+    user.updated_at = generateUnixTimestamp();
+    return await user.save();
+  };
+
+  async delete(userId: string) {
+    const user = await this.findOne({ _id: userId });
+    if (!user) {
+      throw new NotFoundException('No se ha encontrado el usuario especificado');
+    }
+    user.deleted_at = generateUnixTimestamp();
+    return await user.save();
+  }
+
   getSafeParameters(user: User) {
     return {
       ...user.toObject(),
       devices: undefined,
       type: undefined,
       password: undefined,
-      status: undefined,
       roles: undefined,
     };
   }

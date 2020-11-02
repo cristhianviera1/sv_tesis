@@ -19,12 +19,10 @@ export default class CreateNewnessDto {
 
   deleted_at: number;
 
-  constructor(title: string, description: string, image: string, created_at: number, updated_at: number) {
-    this._id = uuid4()
+  constructor(title: string, description: string, image: string) {
+    this._id = uuid4();
     this.title = title;
     this.description = description;
     this.image = image;
-    this.created_at = created_at;
-    this.updated_at = updated_at;
   }
 }
