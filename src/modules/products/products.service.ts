@@ -1,62 +1,59 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { BranchOffice } from '../branch-offices/schema/branch-office.schema';
-import { Product } from './product.model';
+import { FilterQuery, Model } from 'mongoose';
 import CreateProductDto from './dto/create-product.dto';
-import { generateUnixTimestamp } from '../../utils/generateUnixTimestamp';
 import UpdateProductDto from './dto/update-product.dto';
+import { generateUnixTimestamp } from '../../utils/generateUnixTimestamp';
+import { Product } from './schema/product.schema';
 
 @Injectable()
 export class ProductsService {
   constructor(
-    @InjectModel(BranchOffice.name) private BranchOfficeModel: Model<BranchOffice>,
+    @InjectModel(Product.name) private ProductModel: Model<Product>,
   ) {
   }
 
-  async create(createProductDto: CreateProductDto, branchOffice: BranchOffice) {
-    branchOffice.products.push(
-      new Product(
-        createProductDto.name,
-        createProductDto.stock,
-        createProductDto.category,
-        createProductDto.price,
-        createProductDto.detail,
-        createProductDto.image,
-        true,
-        generateUnixTimestamp(),
-        generateUnixTimestamp(),
-      ),
-    );
-    await branchOffice.save();
-    return branchOffice.products;
+  find(conditions: FilterQuery<Product>) {
+    return this.ProductModel.findOne({ ...conditions, deleted_at: null });
   }
 
-  async update(updateProductDto: UpdateProductDto, branchOffice: BranchOffice) {
-    const productIndex = branchOffice.products.findIndex((product) => product._id === updateProductDto._id);
-    if (productIndex === -1) {
+  list() {
+    return this.ProductModel.find({ deleted_at: null });
+  }
+
+  async create(createProductDto: CreateProductDto) {
+    const newProduct = new CreateProductDto(
+      createProductDto.title,
+      createProductDto.stock,
+      createProductDto.category,
+      createProductDto.price,
+      createProductDto.detail,
+      createProductDto.image,
+    );
+    return await this.ProductModel.create(newProduct);
+  }
+
+  async update(updateProductDto: UpdateProductDto) {
+    const product = await this.ProductModel.findOne({ _id: updateProductDto._id });
+    if (!product) {
       throw new NotFoundException('No se ha encontrado el producto');
     }
-    branchOffice.products[productIndex].name = updateProductDto.name;
-    branchOffice.products[productIndex].stock = updateProductDto.stock;
-    branchOffice.products[productIndex].category = updateProductDto.category;
-    branchOffice.products[productIndex].price = updateProductDto.price;
-    branchOffice.products[productIndex].detail = updateProductDto.detail;
-    branchOffice.products[productIndex].image = updateProductDto.image;
-
-    branchOffice.markModified('products');
-    await branchOffice.save();
-    return branchOffice.products[productIndex];
+    product.title = updateProductDto.title;
+    product.stock = updateProductDto.stock;
+    product.category = updateProductDto.category;
+    product.price = updateProductDto.price;
+    product.detail = updateProductDto.detail;
+    product.image = updateProductDto.image;
+    await product.save();
+    return product;
   }
 
-  async delete(id:string, branchOffice: BranchOffice){
-    const productIndex = branchOffice.products.findIndex((product)=>product._id == id);
-    if(productIndex == -1){
-      throw new NotFoundException("No se ha encontrado el producto");
+  async delete(id: string) {
+    const product = await this.ProductModel.findOne({ _id: id });
+    if (!product) {
+      throw new NotFoundException('No se ha encontrado el producto');
     }
-    branchOffice.products.splice(productIndex,1);
-    branchOffice.markModified('products');
-    await branchOffice.save()
-    return branchOffice.products
+    product.deleted_at = generateUnixTimestamp();
+    return await product.save();
   }
 }

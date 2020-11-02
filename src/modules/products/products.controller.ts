@@ -3,14 +3,12 @@ import { ProductsService } from './products.service';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { ACGuard, UseRoles } from 'nest-access-control';
 import CreateProductDto from './dto/create-product.dto';
-import { BranchOfficesService } from '../branch-offices/branch-offices.service';
 import UpdateProductDto from './dto/update-product.dto';
 
 @Controller('products')
 export class ProductsController {
   constructor(
     private readonly productsService: ProductsService,
-    private readonly branchOfficeService: BranchOfficesService,
   ) {
   }
 
@@ -22,8 +20,7 @@ export class ProductsController {
   })
   @Post()
   async create(@Req() req, @Body(ValidationPipe) createProductDto: CreateProductDto) {
-    const associatedBranch = await this.branchOfficeService.findWithEmployee(req?.user?._id);
-    return this.productsService.create(createProductDto, associatedBranch);
+    return this.productsService.create(createProductDto);
   }
 
   @UseGuards(JwtAuthGuard, ACGuard)
@@ -33,9 +30,8 @@ export class ProductsController {
     possession: 'own',
   })
   @Get()
-  async list(@Req() req) {
-    const associatedBranch = await this.branchOfficeService.findWithEmployee(req?.user?._id);
-    return this.branchOfficeService.getSafeParameteres(associatedBranch);
+  async list() {
+    return this.productsService.list();
   }
 
   @UseGuards(JwtAuthGuard, ACGuard)
@@ -46,8 +42,7 @@ export class ProductsController {
   })
   @Put()
   async update(@Req() req, @Body(ValidationPipe) updateProductDto: UpdateProductDto) {
-    const associatedBranch = await this.branchOfficeService.findWithEmployee(req?.user?._id);
-    return this.productsService.update(updateProductDto, associatedBranch);
+    return this.productsService.update(updateProductDto);
   }
 
   @UseGuards(JwtAuthGuard, ACGuard)
@@ -58,7 +53,6 @@ export class ProductsController {
   })
   @Put(':id')
   async delete(@Req() req, @Param('id') id: string) {
-    const associatedBranch = await this.branchOfficeService.findWithEmployee(req?.user?._id);
-    return this.productsService.delete(id, associatedBranch);
+    return this.productsService.delete(id);
   }
 }

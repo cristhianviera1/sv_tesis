@@ -1,12 +1,12 @@
 import { IsNotEmpty } from 'class-validator';
-import { Category } from '../product.model';
+import { Category } from '../schema/product.schema';
 
 export default class UpdateProductDto{
   @IsNotEmpty()
   _id: string;
 
   @IsNotEmpty()
-  name: string;
+  title: string;
 
   @IsNotEmpty()
   stock: number;

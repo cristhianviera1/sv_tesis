@@ -6,7 +6,6 @@ import UpdateEmployeeDto from './dto/udpate-employee.dto';
 import CreateEmployeeUserDto from './dto/create-employee.dto';
 import { UserTypeEnum } from '../users/dto/create-user.dto';
 import { generateUnixTimestamp } from '../../utils/generateUnixTimestamp';
-import { BranchOffice } from '../branch-offices/schema/branch-office.schema';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
@@ -68,44 +67,26 @@ export class EmployeesService {
     }
   }
 
-  async delete(branchOffice: BranchOffice, employee_id: string) {
-    const employee = branchOffice.employees.find((user) => {
-      if (user._id === employee_id) {
-        return user;
-      }
-      return null;
-    });
-
-    const employeeIndex = branchOffice.employees.findIndex(
-      user => user._id === employee_id,
-    );
-
-    if (employeeIndex == -1) {
-      throw new NotFoundException(
-        'No se pudo encontrar el usuario en el negocio asignado',
-      );
+  async delete(employee_id: string) {
+    const employee = await this.usersService.findOne({ _id: employee_id });
+    if (!employee) {
+      throw new NotFoundException('No se ha encontrado el usuario');
     }
-    await this.employeeModel.findByIdAndDelete(employee._id);
-    branchOffice.employees.splice(employeeIndex, 1);
-    await branchOffice.save();
-    return branchOffice;
+    employee.deleted_at = generateUnixTimestamp();
+    return await employee.save();
   }
 
-  async update(updateEmployeeDto: UpdateEmployeeDto, branchOffice: BranchOffice) {
-    const employeeIndex = branchOffice.employees.findIndex((employee) => employee._id == updateEmployeeDto._id);
+  async update(updateEmployeeDto: UpdateEmployeeDto) {
     await this.findIfExist(updateEmployeeDto);
-    if (employeeIndex == -1) {
-      throw new NotFoundException('No se ha encontrado el usuario en el negocio');
-    }
     const employee = await this.usersService.findOne({ _id: updateEmployeeDto._id });
+    if (!employee) {
+      throw new NotFoundException('No se ha encontrado el usuario');
+    }
     employee.dni = updateEmployeeDto.dni;
     employee.name = updateEmployeeDto.name;
     employee.gender = updateEmployeeDto.gender;
     employee.phone = updateEmployeeDto.phone;
     employee.email = updateEmployeeDto.email;
-    branchOffice.employees[employeeIndex] = this.usersService.getSafeParameters(employee);
-    branchOffice.markModified('employees');
-    await employee.save();
-    return employee;
+    return await employee.save();
   }
 }

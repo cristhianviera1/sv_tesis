@@ -1,25 +1,33 @@
 import { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { v4 as uuid4 } from 'uuid';
 import { generateUnixTimestamp } from '../../../utils/generateUnixTimestamp';
-import { Address } from '../../addresses/address.model';
+import { v4 as uuid4 } from 'uuid';
 
 @Schema()
-export class BranchOffice extends Document {
+export class Product extends Document {
   @Prop({ default: () => uuid4() })
   _id: string;
 
   @Prop({ required: true })
-  name: string;
+  title: string;
 
   @Prop({ required: true })
-  address: Address;
+  detail: string;
 
   @Prop({ required: true })
-  email: string;
+  price: number;
 
-  @Prop({ required: true, default: () => false })
-  status?: boolean;
+  @Prop({ required: true })
+  category: Category[];
+
+  @Prop({ required: true })
+  stock: number;
+
+  @Prop({ required: true, default: true })
+  status: boolean;
+
+  @Prop({ required: true })
+  image: string;
 
   @Prop({
     type: 'number',
@@ -39,5 +47,14 @@ export class BranchOffice extends Document {
   deleted_at: number;
 }
 
-export const BranchOfficeSchema = SchemaFactory.createForClass(BranchOffice);
+export const ProductSchema = SchemaFactory.createForClass(Product);
 
+export class Category {
+  _id: string;
+  name: string;
+
+  constructor(name: string) {
+    this._id = uuid4();
+    this.name = name;
+  }
+}
