@@ -11,15 +11,15 @@ import { AuthModule } from './auth/auth.module';
 import { CountriesModule } from './countries/countries.module';
 import { EmployeesModule } from './employees/employees.module';
 import { NewnessModule } from './newnesses/newness.module';
-import { ProductsModule } from './products/products.module';
-import { RoomsModule } from './rooms/rooms.module';
+import { ChatsGateway } from './chats/chats.gateway';
 import { ChatsModule } from './chats/chats.module';
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     UsersModule,
-    MongooseModule.forRoot(`mongodb://localhost/tesis`),
+    MongooseModule.forRoot(`mongodb://${process.env.APP_DBUSERNAME}:${process.env.APP_DBPASSWORD}@${process.env.APP_DBHOST}/${process.env.APP_DBNAME}?authSource=admin`),
     BranchOfficesModule,
     AuthModule,
     CountriesModule,
@@ -27,11 +27,11 @@ import { ChatsModule } from './chats/chats.module';
     EmployeesModule,
     NewnessModule,
     ProductsModule,
-    RoomsModule,
+    //ShoppingCartsModule,
     ChatsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ChatsGateway],
 })
 export class AppModule {
 }

@@ -16,43 +16,54 @@ export class ProductsController {
   @UseRoles({
     resource: 'products',
     action: 'create',
-    possession: 'own',
+    possession: 'any',
   })
   @Post()
   async create(@Req() req, @Body(ValidationPipe) createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
+    return await this.productsService.create(createProductDto);
   }
 
   @UseGuards(JwtAuthGuard, ACGuard)
   @UseRoles({
     resource: 'products',
-    action: 'create',
-    possession: 'own',
+    action: 'read',
+    possession: 'any',
   })
   @Get()
   async list() {
-    return this.productsService.list();
+    return await this.productsService.list({});
+  }
+
+  @UseGuards(JwtAuthGuard, ACGuard)
+  @UseRoles({
+    resource: 'products',
+    action: 'read',
+    possession: 'any',
+  })
+  @Get('/:id')
+  async find(@Param('id')id) {
+    return await this.productsService.findById(id);
   }
 
   @UseGuards(JwtAuthGuard, ACGuard)
   @UseRoles({
     resource: 'products',
     action: 'update',
-    possession: 'own',
+    possession: 'any',
   })
   @Put()
-  async update(@Req() req, @Body(ValidationPipe) updateProductDto: UpdateProductDto) {
-    return this.productsService.update(updateProductDto);
+  async update(@Body(ValidationPipe) updateProductDto: UpdateProductDto) {
+    return await this.productsService.update(updateProductDto);
   }
 
   @UseGuards(JwtAuthGuard, ACGuard)
   @UseRoles({
     resource: 'products',
     action: 'delete',
-    possession: 'own',
+    possession: 'any',
   })
-  @Put(':id')
-  async delete(@Req() req, @Param('id') id: string) {
-    return this.productsService.delete(id);
+  @Put('/:id')
+  async delete(@Param('id') id: string) {
+    return await this.productsService.delete(id);
   }
 }

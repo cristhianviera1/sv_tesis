@@ -1,53 +1,31 @@
-import { IsEmail, IsNotEmpty, IsPhoneNumber } from 'class-validator';
 import { UserGender, UserType } from './create-user.dto';
+import { IsNotEmpty } from 'class-validator';
 
-export default class UpdateUserDto {
-  @IsNotEmpty()
-  user_id: string;
+export class UpdateUserDto {
+  @IsNotEmpty({ message: 'El campo id es requerido' })
+  _id: string;
 
-  @IsNotEmpty()
-  dni: string;
-
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'El campo nombre es requerido' })
   name: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'El campo apellido es requerido' })
   surname: string;
 
-  @IsNotEmpty()
-  password: string;
+  password?: string;
 
-  @IsNotEmpty()
-  @IsPhoneNumber('EC')
+  @IsNotEmpty({ message: 'El campo teléfono es requerido' })
   phone: string;
 
-  @IsNotEmpty()
-  @IsEmail()
+  @IsNotEmpty({ message: 'El campo correo electrónico es requerido' })
   email: string;
 
-  @IsNotEmpty()
-  status: boolean;
+  @IsNotEmpty({ message: 'El campo estado es requerido' })
+  status?: boolean;
 
-  @IsNotEmpty()
+  devices?: string[];
+
+  @IsNotEmpty({ message: 'El campo rol es requerido' })
   roles: UserType;
 
-  @IsNotEmpty()
-  gender: UserGender;
-
-  @IsNotEmpty()
-  birthday: number;
-
-
-  constructor(dni: string, name: string, surname: string, password: string, phone: string, email: string, status: boolean, roles: UserType, gender: UserGender, birthday: number) {
-    this.dni = dni;
-    this.name = name;
-    this.surname = surname;
-    this.password = password;
-    this.phone = phone;
-    this.email = email;
-    this.status = status;
-    this.roles = roles;
-    this.gender = gender;
-    this.birthday = birthday;
-  }
+  gender?: UserGender;
 }

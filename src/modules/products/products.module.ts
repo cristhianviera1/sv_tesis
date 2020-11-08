@@ -10,7 +10,6 @@ import { Product, ProductSchema } from './schema/product.schema';
     MongooseModule.forFeature([
       { name: Product.name, schema: ProductSchema },
     ]),
-    ProductsModule,
   ],
   providers: [ProductsService, JwtStrategy],
   controllers: [ProductsController],

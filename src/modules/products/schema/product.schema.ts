@@ -1,7 +1,7 @@
 import { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { generateUnixTimestamp } from '../../../utils/generateUnixTimestamp';
 import { v4 as uuid4 } from 'uuid';
+import { generateUnixTimestamp } from '../../../utils/generateUnixTimestamp';
 
 @Schema()
 export class Product extends Document {
@@ -9,25 +9,26 @@ export class Product extends Document {
   _id: string;
 
   @Prop({ required: true })
-  title: string;
+  name: string;
+
+  @Prop({ required: true, default: 0 })
+  stock: number;
+
+  @Prop({ required: true })
+  category: Category[];
+
+  @Prop({ required: true, default: 0 })
+  price: number;
 
   @Prop({ required: true })
   detail: string;
 
   @Prop({ required: true })
-  price: number;
-
-  @Prop({ required: true })
-  category: Category[];
-
-  @Prop({ required: true })
-  stock: number;
+  image: string;
 
   @Prop({ required: true, default: true })
   status: boolean;
 
-  @Prop({ required: true })
-  image: string;
 
   @Prop({
     type: 'number',
@@ -47,8 +48,6 @@ export class Product extends Document {
   deleted_at: number;
 }
 
-export const ProductSchema = SchemaFactory.createForClass(Product);
-
 export class Category {
   _id: string;
   name: string;
@@ -58,3 +57,6 @@ export class Category {
     this.name = name;
   }
 }
+
+
+export const ProductSchema = SchemaFactory.createForClass(Product);

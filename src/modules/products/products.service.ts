@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import CreateProductDto from './dto/create-product.dto';
-import UpdateProductDto from './dto/update-product.dto';
 import { generateUnixTimestamp } from '../../utils/generateUnixTimestamp';
+import UpdateProductDto from './dto/update-product.dto';
 import { Product } from './schema/product.schema';
 
 @Injectable()
@@ -13,17 +13,25 @@ export class ProductsService {
   ) {
   }
 
-  find(conditions: FilterQuery<Product>) {
-    return this.ProductModel.findOne({ ...conditions, deleted_at: null });
+  async findById(id: string) {
+    const product = await this.findOne({ _id: id });
+    if (!product) {
+      throw new NotFoundException('No se ha encontrado el producto con el id proporcionado');
+    }
+    return product;
   }
 
-  list() {
-    return this.ProductModel.find({ deleted_at: null });
+  async findOne(conditions: FilterQuery<Product>) {
+    return this.ProductModel.findOne(conditions);
+  }
+
+  async list(conditions: FilterQuery<Product>) {
+    return this.ProductModel.find(conditions);
   }
 
   async create(createProductDto: CreateProductDto) {
     const newProduct = new CreateProductDto(
-      createProductDto.title,
+      createProductDto.name,
       createProductDto.stock,
       createProductDto.category,
       createProductDto.price,
@@ -34,26 +42,21 @@ export class ProductsService {
   }
 
   async update(updateProductDto: UpdateProductDto) {
-    const product = await this.ProductModel.findOne({ _id: updateProductDto._id });
-    if (!product) {
-      throw new NotFoundException('No se ha encontrado el producto');
-    }
-    product.title = updateProductDto.title;
+    const product = await this.findById(updateProductDto._id);
+    product.name = updateProductDto.name;
     product.stock = updateProductDto.stock;
     product.category = updateProductDto.category;
     product.price = updateProductDto.price;
     product.detail = updateProductDto.detail;
     product.image = updateProductDto.image;
-    await product.save();
-    return product;
+
+    return await product.save();
   }
 
   async delete(id: string) {
-    const product = await this.ProductModel.findOne({ _id: id });
-    if (!product) {
-      throw new NotFoundException('No se ha encontrado el producto');
-    }
+    const product = await this.findById(id);
     product.deleted_at = generateUnixTimestamp();
-    return await product.save();
+    await product.save();
+    return true;
   }
 }

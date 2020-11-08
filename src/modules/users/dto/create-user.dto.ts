@@ -1,6 +1,3 @@
-import { Address } from '../../addresses/address.model';
-
-
 export interface CreateUserDto {
   name: string;
   surname: string;
@@ -11,7 +8,6 @@ export interface CreateUserDto {
   devices?: string;
   roles: UserType;
   gender: UserGender;
-  addresses?: Address;
 }
 
 export enum UserTypeEnum {

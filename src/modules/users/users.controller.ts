@@ -1,12 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Put, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { ACGuard, UseRoles } from 'nest-access-control';
-import UpdateUserDto from './dto/update-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {
+
+  constructor(
+    private readonly usersService: UsersService,
+  ) {
   }
 
   @UseGuards(JwtAuthGuard, ACGuard)
@@ -16,8 +20,30 @@ export class UsersController {
     possession: 'any',
   })
   @Get()
-  list() {
-    return this.usersService.list();
+  async list() {
+    return this.usersService.list({});
+  }
+
+  @UseGuards(JwtAuthGuard, ACGuard)
+  @UseRoles({
+    resource: 'users',
+    action: 'read',
+    possession: 'any',
+  })
+  @Get('/:id')
+  async findOne(@Param('id') id) {
+    return this.usersService.findOne({ _id: id });
+  }
+
+  @UseGuards(JwtAuthGuard, ACGuard)
+  @UseRoles({
+    resource: 'users',
+    action: 'create',
+    possession: 'any',
+  })
+  @Post()
+  async create(createUserDto: CreateUserDto) {
+    return await this.usersService.create(createUserDto);
   }
 
   @UseGuards(JwtAuthGuard, ACGuard)
@@ -27,18 +53,20 @@ export class UsersController {
     possession: 'any',
   })
   @Put()
-  update(@Body(ValidationPipe) updateUserDto: UpdateUserDto) {
+  async update(updateUserDto: UpdateUserDto) {
     return this.usersService.update(updateUserDto);
   }
 
   @UseGuards(JwtAuthGuard, ACGuard)
   @UseRoles({
     resource: 'users',
-    action: 'delete',
+    action: 'update',
     possession: 'any',
   })
   @Delete('/:id')
-  delete(@Param('id') id: string) {
-    return this.usersService.delete(id);
+  async delete(@Param('id') id) {
+    return await this.usersService.delete(id);
   }
+
+
 }
