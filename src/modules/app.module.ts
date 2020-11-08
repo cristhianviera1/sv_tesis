@@ -11,8 +11,6 @@ import { AuthModule } from './auth/auth.module';
 import { CountriesModule } from './countries/countries.module';
 import { EmployeesModule } from './employees/employees.module';
 import { NewnessModule } from './newnesses/newness.module';
-import { ChatsGateway } from './chats/chats.gateway';
-import { ChatsModule } from './chats/chats.module';
 import { ProductsModule } from './products/products.module';
 
 @Module({
@@ -27,11 +25,13 @@ import { ProductsModule } from './products/products.module';
     EmployeesModule,
     NewnessModule,
     ProductsModule,
+    //TODO
+    //RoomsModule,
     //ShoppingCartsModule,
-    ChatsModule,
+    //ChatsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ChatsGateway],
+  providers: [AppService],
 })
 export class AppModule {
 }

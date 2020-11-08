@@ -6,7 +6,7 @@ export default class UpdateProductDto{
   _id: string;
 
   @IsNotEmpty()
-  title: string;
+  name: string;
 
   @IsNotEmpty()
   stock: number;
