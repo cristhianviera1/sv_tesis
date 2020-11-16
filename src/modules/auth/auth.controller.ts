@@ -60,21 +60,8 @@ export class AuthController {
     );
 
     client.roles = UserTypeEnum.CLIENT;
-
-    if (
-      !(await this.userService.existingPhoneOrEmail(
-        createClientUserDto.phone,
-        createClientUserDto.email,
-      ))
-    ) {
-      await this.userService.create(client);
-      return {
-        msg: 'Cliente creado exitosamente',
-      };
-    }
-
-
-    return createClientUserDto;
+    const createdUser = await this.userService.create(client);
+    return await createdUser.save();
   }
 
   @UseGuards(JwtAuthGuard)

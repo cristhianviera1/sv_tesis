@@ -1,5 +1,4 @@
 import { IsNotEmpty } from 'class-validator';
-import { Category } from '../schema/product.schema';
 
 export default class UpdateProductDto{
   @IsNotEmpty()
@@ -10,8 +9,6 @@ export default class UpdateProductDto{
 
   @IsNotEmpty()
   stock: number;
-
-  category: Category[];
 
   @IsNotEmpty()
   price: number;

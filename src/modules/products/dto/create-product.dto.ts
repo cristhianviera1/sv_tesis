@@ -1,6 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
 import { v4 as uuid4 } from 'uuid';
-import { Category } from '../schema/product.schema';
 
 export default class CreateProductDto {
   _id: string;
@@ -12,8 +11,6 @@ export default class CreateProductDto {
   stock: number;
 
   status: boolean;
-
-  category: Category[];
 
   @IsNotEmpty({ message: 'El campo precio es requerido' })
   price: number;
@@ -28,11 +25,10 @@ export default class CreateProductDto {
   updated_at: number;
   deleted_at: number;
 
-  constructor(name: string, stock: number, category: Category[], price: number, detail: string, image: string) {
+  constructor(name: string, stock: number, price: number, detail: string, image: string) {
     this._id = uuid4();
     this.name = name;
     this.stock = stock;
-    this.category = category;
     this.price = price;
     this.detail = detail;
     this.image = image;

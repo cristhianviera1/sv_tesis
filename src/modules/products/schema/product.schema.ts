@@ -14,9 +14,6 @@ export class Product extends Document {
   @Prop({ required: true, default: 0 })
   stock: number;
 
-  @Prop({ required: true })
-  category: Category[];
-
   @Prop({ required: true, default: 0 })
   price: number;
 
@@ -47,16 +44,5 @@ export class Product extends Document {
   })
   deleted_at: number;
 }
-
-export class Category {
-  _id: string;
-  name: string;
-
-  constructor(name: string) {
-    this._id = uuid4();
-    this.name = name;
-  }
-}
-
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

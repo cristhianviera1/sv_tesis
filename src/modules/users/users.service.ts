@@ -16,13 +16,12 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    if (await this.existingPhoneOrEmail(createUserDto.phone, createUserDto.email)) {
+    if (!!!(await this.existingPhoneOrEmail(createUserDto.phone, createUserDto.email))) {
       throw new ConflictException('Ya existe un usuario con ese correo electrónico y número telefónico.');
     }
     const createdUser = new this.User(createUserDto);
     return createdUser.save();
   }
-
   async findOne(conditions: FilterQuery<User>): Promise<User> {
     const user = await this.User.findOne(conditions);
     if (!user) {

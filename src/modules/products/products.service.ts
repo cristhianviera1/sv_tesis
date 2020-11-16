@@ -33,7 +33,6 @@ export class ProductsService {
     const newProduct = new CreateProductDto(
       createProductDto.name,
       createProductDto.stock,
-      createProductDto.category,
       createProductDto.price,
       createProductDto.detail,
       createProductDto.image,
@@ -45,7 +44,6 @@ export class ProductsService {
     const product = await this.findById(updateProductDto._id);
     product.name = updateProductDto.name;
     product.stock = updateProductDto.stock;
-    product.category = updateProductDto.category;
     product.price = updateProductDto.price;
     product.detail = updateProductDto.detail;
     product.image = updateProductDto.image;
