@@ -1,14 +1,20 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { User } from './schemas/user.schema';
-import { CreateUserDto } from './dto/create-user.dto';
+import CreateUserDto from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { generateUnixTimestamp } from '../../utils/generateUnixTimestamp';
+import { MailerService } from '@nestjs-modules/mailer';
+import { FromMail, PasswordBody, PasswordHtml, PasswordSubject } from '../../consts/mailer-message';
+import generator from 'generate-password';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private User: Model<User>) {
+  constructor(@InjectModel(User.name)
+              private User: Model<User>,
+              private readonly mailerService: MailerService,
+  ) {
   }
 
   async list(condition: FilterQuery<User>) {
@@ -19,9 +25,33 @@ export class UsersService {
     if (!!!(await this.existingPhoneOrEmail(createUserDto.phone, createUserDto.email))) {
       throw new ConflictException('Ya existe un usuario con ese correo electrónico y número telefónico.');
     }
-    const createdUser = new this.User(createUserDto);
+    const user = new CreateUserDto(
+      createUserDto.name,
+      createUserDto.surname,
+      createUserDto.phone,
+      createUserDto.email,
+      createUserDto.roles,
+      createUserDto.gender,
+    );
+    const createdUser = new this.User(user);
+    const generatedPassword = generator.generate({
+      length: 10,
+      numbers: true,
+    });
+    this.mailerService.sendMail({
+      to: createUserDto.email,
+      from: FromMail,
+      subject: PasswordSubject,
+      text: PasswordBody(generatedPassword),
+      html: PasswordHtml,
+    }).then((message) => {
+      console.info(message);
+    }).catch(() => {
+      throw new InternalServerErrorException('No se ha podido enviar el correo electrónico, por favor solicite que se envia nuevamente');
+    });
     return createdUser.save();
   }
+
   async findOne(conditions: FilterQuery<User>): Promise<User> {
     const user = await this.User.findOne(conditions);
     if (!user) {

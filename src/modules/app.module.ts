@@ -12,12 +12,27 @@ import { CountriesModule } from './countries/countries.module';
 import { EmployeesModule } from './employees/employees.module';
 import { NewnessModule } from './newnesses/newness.module';
 import { ProductsModule } from './products/products.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     UsersModule,
     MongooseModule.forRoot(`mongodb://${process.env.APP_DBUSERNAME}:${process.env.APP_DBPASSWORD}@${process.env.APP_DBHOST}/${process.env.APP_DBNAME}?authSource=admin`),
+    MailerModule.forRoot({
+      transport: {
+        host: `${process.env.MAIL_HOST}`,
+        port: process.env.MAIL_PORT,
+        secure: process.env.MAIL_SECURE,
+        auth: {
+          user: `${process.env.MAIL_USER}`,
+          pass: `${process.env.MAIL_PASS}`,
+        },
+      },
+      defaults: {
+        from: '"nest-modules" <modules@nestjs.com>',
+      },
+    }),
     BranchOfficesModule,
     AuthModule,
     CountriesModule,

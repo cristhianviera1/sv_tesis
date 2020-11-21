@@ -29,6 +29,6 @@ roles
   .createOwn(['users', 'shopping-carts'])
   .deleteOwn(['users', 'shopping-carts'])
   .readOwn(['users', 'shopping-carts'])
-  .readAny(['products'])
+  .readAny(['products', 'newness'])
   .updateOwn(['users', 'shopping-carts'])
 ;
