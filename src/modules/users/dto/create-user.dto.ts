@@ -28,7 +28,7 @@ export default class CreateUserDto {
   email: string;
 
   status?: boolean;
-  devices?: string;
+  devices?: string[];
   roles: UserType;
 
   @IsNotEmpty()

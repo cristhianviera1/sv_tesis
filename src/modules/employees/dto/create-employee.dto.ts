@@ -1,10 +1,8 @@
 import { IsEmail, IsNotEmpty, IsPhoneNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import * as bcrypt from 'bcrypt';
-import { v4 as uuid4 } from 'uuid';
-import { CreateUserDto, UserGender, UserType } from '../../users/dto/create-user.dto';
+import CreateUserDto, { UserGender, UserType } from '../../users/dto/create-user.dto';
 
-export default class CreateEmployeeUserDto implements CreateUserDto {
+export default class CreateEmployeeUserDto extends CreateUserDto {
 
   _id: string;
 
@@ -42,32 +40,11 @@ export default class CreateEmployeeUserDto implements CreateUserDto {
 
   status?: boolean;
 
-  @ApiProperty()
-  device?: string;
+  devices?: string[];
 
   roles: UserType;
 
   created_at: number;
   updated_at: number;
   deleted_at: number;
-
-
-  constructor(dni: string, name: string, surname: string, gender: UserGender, password: string, phone: string, email: string, status: boolean, roles: UserType, created_at: number, updated_at: number, deleted_at?: number, device?: string) {
-    this._id = uuid4();
-    this.dni = dni;
-    this.name = name;
-    this.surname = surname;
-    this.gender = gender;
-    if (password) {
-      this.password = bcrypt.hashSync(password, 10);
-    }
-    this.phone = phone;
-    this.email = email;
-    this.status = status;
-    this.device = device;
-    this.roles = roles;
-    this.created_at = created_at;
-    this.updated_at = updated_at;
-    this.deleted_at = deleted_at;
-  }
 }

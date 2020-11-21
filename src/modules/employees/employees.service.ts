@@ -18,21 +18,15 @@ export class EmployeesService {
 
   async create(createEmployeeDto: CreateEmployeeUserDto) {
     await this.findIfExist(createEmployeeDto);
-    const createdEmployee = await this.employeeModel.create(
-      new CreateEmployeeUserDto(
-        createEmployeeDto.dni,
-        createEmployeeDto.name,
-        createEmployeeDto.surname,
-        createEmployeeDto.gender,
-        createEmployeeDto.password,
-        createEmployeeDto.phone,
-        createEmployeeDto.email,
-        true,
-        UserTypeEnum.BRANCH_ADMIN,
-        generateUnixTimestamp(),
-        generateUnixTimestamp(),
-      ),
+    const employee = new CreateEmployeeUserDto(
+      createEmployeeDto.name,
+      createEmployeeDto.surname,
+      createEmployeeDto.phone,
+      createEmployeeDto.email,
+      UserTypeEnum.BRANCH_ADMIN,
+      createEmployeeDto.gender,
     );
+    const createdEmployee = await this.employeeModel.create(employee);
     return createdEmployee.save();
   }
 

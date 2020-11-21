@@ -2,7 +2,7 @@ import { Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/co
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { ACGuard, UseRoles } from 'nest-access-control';
-import { CreateUserDto } from './dto/create-user.dto';
+import CreateUserDto from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')

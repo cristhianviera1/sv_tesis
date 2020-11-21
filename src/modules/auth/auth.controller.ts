@@ -7,7 +7,6 @@ import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { CreateClientUserDto } from '../users/dto/create-client-user.dto';
-import { convertToUnixTimestamp } from '../../utils/generateUnixTimestamp';
 
 @Controller('auth')
 export class AuthController {
@@ -51,15 +50,12 @@ export class AuthController {
     const client = new CreateClientUserDto(
       createClientUserDto.name,
       createClientUserDto.surname,
-      createClientUserDto.gender,
-      convertToUnixTimestamp(createClientUserDto.birthday),
-      createClientUserDto.password,
       createClientUserDto.phone,
-      createClientUserDto.email.toLowerCase(),
-      createClientUserDto.status = true,
+      createClientUserDto.email,
+      UserTypeEnum.CLIENT,
+      createClientUserDto.gender,
     );
 
-    client.roles = UserTypeEnum.CLIENT;
     const createdUser = await this.userService.create(client);
     return await createdUser.save();
   }
