@@ -22,9 +22,13 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    if (!!!(await this.existingPhoneOrEmail(createUserDto.phone, createUserDto.email))) {
+    if (!!!(await this.existingPhoneOrEmail(createUserDto?.phone, createUserDto?.email))) {
       throw new ConflictException('Ya existe un usuario con ese correo electrónico y número telefónico.');
     }
+    const generatedPassword = generator.generate({
+      length: 10,
+      numbers: true,
+    });
     const user = new CreateUserDto(
       createUserDto.name,
       createUserDto.surname,
@@ -32,12 +36,9 @@ export class UsersService {
       createUserDto.email,
       createUserDto.roles,
       createUserDto.gender,
+      generatedPassword
     );
     const createdUser = new this.User(user);
-    const generatedPassword = generator.generate({
-      length: 10,
-      numbers: true,
-    });
     this.mailerService.sendMail({
       to: createUserDto.email,
       from: FromMail,

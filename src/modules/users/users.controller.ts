@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { ACGuard, UseRoles } from 'nest-access-control';
@@ -42,7 +42,7 @@ export class UsersController {
     possession: 'any',
   })
   @Post()
-  async create(createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto) {
     return await this.usersService.create(createUserDto);
   }
 

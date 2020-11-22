@@ -1,6 +1,7 @@
 import { v4 as uuid4 } from 'uuid';
 import { IsEmail, IsNotEmpty, IsPhoneNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import passport from 'passport';
 
 export default class CreateUserDto {
   _id: string;
@@ -35,7 +36,7 @@ export default class CreateUserDto {
   @ApiProperty()
   gender: UserGender;
 
-  constructor(name: string, surname: string, phone: string, email: string, roles: UserType, gender: UserGender) {
+  constructor(name: string, surname: string, phone: string, email: string, roles: UserType, gender: UserGender, password: string) {
     this._id = uuid4();
     this.name = name;
     this.surname = surname;
@@ -43,6 +44,7 @@ export default class CreateUserDto {
     this.email = email;
     this.roles = roles;
     this.gender = gender;
+    this.password = password;
   }
 }
 

@@ -18,7 +18,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
   imports: [
     ConfigModule.forRoot(),
     UsersModule,
-    MongooseModule.forRoot(`mongodb://${process.env.APP_DBUSERNAME}:${process.env.APP_DBPASSWORD}@${process.env.APP_DBHOST}/${process.env.APP_DBNAME}?authSource=admin`),
+    MongooseModule.forRoot(`mongodb://localhost/tesis`),
     MailerModule.forRoot({
       transport: {
         host: `${process.env.MAIL_HOST}`,

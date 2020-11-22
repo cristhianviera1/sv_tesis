@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Post, Request, UseGuards, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, InternalServerErrorException, Post, Request, UseGuards, ValidationPipe } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserTypeEnum } from '../users/dto/create-user.dto';
@@ -7,6 +7,9 @@ import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { CreateClientUserDto } from '../users/dto/create-client-user.dto';
+import generator from 'generate-password';
+import { FromMail, PasswordSubject, PasswordBody, PasswordHtml } from 'src/consts/mailer-message';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Controller('auth')
 export class AuthController {
@@ -14,6 +17,7 @@ export class AuthController {
     private userService: UsersService,
     private authService: AuthService,
     private jwtService: JwtService,
+    private readonly mailerService: MailerService
   ) {
   }
 
@@ -47,6 +51,11 @@ export class AuthController {
   @Post('register')
   async signUp(@Body(ValidationPipe) createClientUserDto: CreateClientUserDto) {
 
+    const generatedPassword = generator.generate({
+      length: 10,
+      numbers: true,
+    });
+
     const client = new CreateClientUserDto(
       createClientUserDto.name,
       createClientUserDto.surname,
@@ -54,8 +63,19 @@ export class AuthController {
       createClientUserDto.email,
       UserTypeEnum.CLIENT,
       createClientUserDto.gender,
+      generatedPassword
     );
-
+    this.mailerService.sendMail({
+      to: createClientUserDto.email,
+      from: FromMail,
+      subject: PasswordSubject,
+      text: PasswordBody(generatedPassword),
+      html: PasswordHtml,
+    }).then((message) => {
+      console.info(message);
+    }).catch(() => {
+      throw new InternalServerErrorException('No se ha podido enviar el correo electrónico, por favor solicite que se envia nuevamente');
+    });
     const createdUser = await this.userService.create(client);
     return await createdUser.save();
   }
