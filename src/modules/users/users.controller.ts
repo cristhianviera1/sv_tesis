@@ -53,7 +53,7 @@ export class UsersController {
     possession: 'any',
   })
   @Put()
-  async update(updateUserDto: UpdateUserDto) {
+  async update(@Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(updateUserDto);
   }
 
