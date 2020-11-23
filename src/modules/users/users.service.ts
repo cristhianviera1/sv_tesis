@@ -80,7 +80,7 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('No se ha encontrado el usuario específicado');
     }
-    if (updateUserDto.email !== user.email && updateUserDto.phone !== user.phone && await this.existingPhoneOrEmail(updateUserDto.phone, updateUserDto.email)) {
+    if (updateUserDto.email !== user.email && updateUserDto.phone !== user.phone && !!!(await this.existingPhoneOrEmail(updateUserDto.phone, updateUserDto.email))) {
       throw new ConflictException('Ya existe un usuario con ese correo electrónico y número telefónico.');
     }
     user.name = updateUserDto.name;
