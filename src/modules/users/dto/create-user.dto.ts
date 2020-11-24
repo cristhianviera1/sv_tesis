@@ -1,7 +1,7 @@
 import { v4 as uuid4 } from 'uuid';
 import { IsEmail, IsNotEmpty, IsPhoneNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import passport from 'passport';
+import * as bcrypt from 'bcrypt';
 
 export default class CreateUserDto {
   _id: string;
@@ -44,7 +44,9 @@ export default class CreateUserDto {
     this.email = email;
     this.roles = roles;
     this.gender = gender;
-    this.password = password;
+    if (password) {
+      this.password = bcrypt.hashSync(password, 10);
+    }
   }
 }
 

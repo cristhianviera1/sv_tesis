@@ -1,6 +1,7 @@
 import { IsEmail, IsNotEmpty, IsPhoneNumber, IsString, MaxLength, MinLength } from 'class-validator';
 import CreateUserDto, { UserGender, UserType } from './create-user.dto';
 import { ApiProperty } from '@nestjs/swagger';
+import * as bcrypt from 'bcrypt';
 
 export class CreateClientUserDto extends CreateUserDto {
 
@@ -50,4 +51,20 @@ export class CreateClientUserDto extends CreateUserDto {
   @ApiProperty()
   @IsNotEmpty({ message: 'La fecha de nacimiento es obligatoria' })
   birthday: number;
+
+  constructor(name: string, surname: string, phone: string, email: string, roles: UserType, gender: UserGender, password: string, status: boolean, device: string, birthday: number) {
+    super(name, surname, phone, email, roles, gender, password);
+    this.name = name;
+    this.surname = surname;
+    if (password) {
+      this.password = bcrypt.hashSync(password, 10);
+    }
+    this.phone = phone;
+    this.email = email;
+    this.status = status;
+    this.device = device;
+    this.roles = roles;
+    this.gender = gender;
+    this.birthday = birthday;
+  }
 }

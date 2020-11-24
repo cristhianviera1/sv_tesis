@@ -8,6 +8,7 @@ import { generateUnixTimestamp } from '../../utils/generateUnixTimestamp';
 import { MailerService } from '@nestjs-modules/mailer';
 import { FromMail, PasswordBody, PasswordHtml, PasswordSubject } from '../../consts/mailer-message';
 import generator from 'generate-password';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -36,7 +37,7 @@ export class UsersService {
       createUserDto.email,
       createUserDto.roles,
       createUserDto.gender,
-      generatedPassword
+      generatedPassword,
     );
     const createdUser = new this.User(user);
     this.mailerService.sendMail({
@@ -85,7 +86,9 @@ export class UsersService {
     }
     user.name = updateUserDto.name;
     user.surname = updateUserDto.surname;
-    user.password = updateUserDto.password;
+    if (updateUserDto.password) {
+      user.password = bcrypt.hashSync(updateUserDto.password, 10);
+    }
     user.phone = updateUserDto.phone;
     user.email = updateUserDto.email;
     user.status = updateUserDto.status;
