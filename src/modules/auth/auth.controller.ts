@@ -1,4 +1,14 @@
-import { BadRequestException, Body, Controller, Get, InternalServerErrorException, Post, Request, UseGuards, ValidationPipe } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  InternalServerErrorException,
+  Post,
+  Request,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserTypeEnum } from '../users/dto/create-user.dto';
@@ -8,7 +18,7 @@ import { SignInDto } from './dto/sign-in.dto';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { CreateClientUserDto } from '../users/dto/create-client-user.dto';
 import generator from 'generate-password';
-import { FromMail, PasswordSubject, PasswordBody, PasswordHtml } from 'src/consts/mailer-message';
+import { FromMail, PasswordBody, PasswordHtml, PasswordSubject } from 'src/consts/mailer-message';
 import { MailerService } from '@nestjs-modules/mailer';
 
 @Controller('auth')
@@ -17,7 +27,7 @@ export class AuthController {
     private userService: UsersService,
     private authService: AuthService,
     private jwtService: JwtService,
-    private readonly mailerService: MailerService
+    private readonly mailerService: MailerService,
   ) {
   }
 
@@ -63,7 +73,9 @@ export class AuthController {
       createClientUserDto.email,
       UserTypeEnum.CLIENT,
       createClientUserDto.gender,
-      generatedPassword
+      generatedPassword,
+      true,
+      createClientUserDto.birthday,
     );
     this.mailerService.sendMail({
       to: createClientUserDto.email,

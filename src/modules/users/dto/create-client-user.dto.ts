@@ -52,7 +52,7 @@ export class CreateClientUserDto extends CreateUserDto {
   @IsNotEmpty({ message: 'La fecha de nacimiento es obligatoria' })
   birthday: number;
 
-  constructor(name: string, surname: string, phone: string, email: string, roles: UserType, gender: UserGender, password: string, status: boolean, device: string, birthday: number) {
+  constructor(name: string, surname: string, phone: string, email: string, roles: UserType, gender: UserGender, password: string, status: boolean, birthday: number) {
     super(name, surname, phone, email, roles, gender, password);
     this.name = name;
     this.surname = surname;
@@ -62,7 +62,6 @@ export class CreateClientUserDto extends CreateUserDto {
     this.phone = phone;
     this.email = email;
     this.status = status;
-    this.device = device;
     this.roles = roles;
     this.gender = gender;
     this.birthday = birthday;

@@ -5,6 +5,7 @@ import { FilterQuery, Model } from 'mongoose';
 import CreateShoppingCartDto from './dto/create-shopping-cart.dto';
 import { UsersService } from '../users/users.service';
 import { ProductsService } from '../products/products.service';
+import { User } from '../users/schemas/user.schema';
 
 @Injectable()
 export class ShoppingCartsService {
@@ -32,11 +33,10 @@ export class ShoppingCartsService {
     return shoppingCart;
   }
 
-  async create(createShoppingCartDto: CreateShoppingCartDto) {
+  async create(createShoppingCartDto: CreateShoppingCartDto, user: User) {
     //TODO
-    /*const user = await this.usersService.findById(createShoppingCartDto._id);
-    let products = createShoppingCartDto.products[0].product._id
-
+    //let products = createShoppingCartDto.products[0].product._id
+    /*
 
     const order = new CreateShoppingCartDto(
       this.usersService.getSafeParameters(user),
