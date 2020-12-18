@@ -1,5 +1,5 @@
 import { v4 as uuid4 } from 'uuid';
-import { IsEmail, IsNotEmpty, IsPhoneNumber } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsPhoneNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
 
@@ -16,10 +16,6 @@ export default class CreateUserDto {
 
   password: string;
 
-  @IsNotEmpty()
-  @ApiProperty()
-  @IsPhoneNumber('EC', { message: 'El numero celular es invalido' })
-  phone: string;
 
   @IsNotEmpty()
   @ApiProperty()
@@ -32,11 +28,16 @@ export default class CreateUserDto {
   devices?: string[];
   roles: UserType;
 
-  @IsNotEmpty()
   @ApiProperty()
-  gender: UserGender;
+  @IsOptional()
+  gender?: UserGender;
 
-  constructor(name: string, surname: string, phone: string, email: string, roles: UserType, gender: UserGender, password: string) {
+  @ApiProperty()
+  @IsOptional()
+  @IsPhoneNumber('EC', { message: 'El numero celular es invalido' })
+  phone?: string;
+
+  constructor(name: string, surname: string, email: string, roles: UserType, password: string, gender?: UserGender, phone?: string) {
     this._id = uuid4();
     this.name = name;
     this.surname = surname;

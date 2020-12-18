@@ -17,16 +17,18 @@ export class RoomsService {
     return this.RoomModel.findOne({ ...conditions, deleted_at: null });
   }
 
-  async findWithUsers(fromUser: User, toUser: User) {
-    const room = await this.RoomModel.findOne({
-      fromUser: fromUser._id || toUser._id,
-      toUser: toUser._id || fromUser._id,
+  async list(conditions: FilterQuery<Room>) {
+    return this.RoomModel.find(conditions);
+  }
+
+  findWithUsers(fromUser: User, toUser: User) {
+    return this.RoomModel.findOne({
+      $or: [
+        { fromUser: fromUser._id, toUser: toUser._id },
+        { fromUser: toUser._id, toUser: fromUser._id },
+      ],
       deleted_at: null,
     });
-    if (!room) {
-      throw new NotFoundException('No se ha enconrtado una sala con los usuarios proporcionados');
-    }
-    return room;
   }
 
   async create(fromUser: User, toUser: User) {

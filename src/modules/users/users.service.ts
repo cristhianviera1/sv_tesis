@@ -1,56 +1,37 @@
-import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { User } from './schemas/user.schema';
 import CreateUserDto from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { generateUnixTimestamp } from '../../utils/generateUnixTimestamp';
-import { MailerService } from '@nestjs-modules/mailer';
-import { FromMail, PasswordBody, PasswordHtml, PasswordSubject } from '../../consts/mailer-message';
-import generator from 'generate-password';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name)
               private User: Model<User>,
-              private readonly mailerService: MailerService,
   ) {
   }
 
-  async list(condition: FilterQuery<User>) {
-    return this.User.find(condition);
+  async list(condition: FilterQuery<User>, start = 0, items = 20) {
+    return this.User.find(condition).skip(start).limit(items);
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    if (!!!(await this.existingPhoneOrEmail(createUserDto?.phone, createUserDto?.email))) {
-      throw new ConflictException('Ya existe un usuario con ese correo electrónico y número telefónico.');
+    if (await this.existingPhoneOrEmail(createUserDto?.email)) {
+      throw new ConflictException('Ya existe un usuario con ese correo electrónico.');
     }
-    const generatedPassword = generator.generate({
-      length: 10,
-      numbers: true,
-    });
     const user = new CreateUserDto(
       createUserDto.name,
       createUserDto.surname,
-      createUserDto.phone,
       createUserDto.email,
       createUserDto.roles,
+      createUserDto.password,
       createUserDto.gender,
-      generatedPassword,
+      createUserDto.phone,
     );
     const createdUser = new this.User(user);
-    this.mailerService.sendMail({
-      to: createUserDto.email,
-      from: FromMail,
-      subject: PasswordSubject,
-      text: PasswordBody(generatedPassword),
-      html: PasswordHtml,
-    }).then((message) => {
-      console.info(message);
-    }).catch(() => {
-      throw new InternalServerErrorException('No se ha podido enviar el correo electrónico, por favor solicite que se envia nuevamente');
-    });
     return createdUser.save();
   }
 
@@ -81,7 +62,7 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('No se ha encontrado el usuario específicado');
     }
-    if (updateUserDto.email !== user.email && updateUserDto.phone !== user.phone && !!!(await this.existingPhoneOrEmail(updateUserDto.phone, updateUserDto.email))) {
+    if (updateUserDto.email !== user.email && updateUserDto.phone !== user.phone && !!!(await this.existingPhoneOrEmail(updateUserDto.email))) {
       throw new ConflictException('Ya existe un usuario con ese correo electrónico y número telefónico.');
     }
     user.name = updateUserDto.name;
@@ -98,16 +79,13 @@ export class UsersService {
     return await user.save();
   }
 
-  async existingPhoneOrEmail(
-    phone: string,
-    email: string,
-  ) {
-    return this.User.find({
-      $or: [
-        { email: email },
-        { phone: phone },
-      ],
-    });
+  async updateStatus(user: User, status: boolean) {
+    user.status = status;
+    return await user.save();
+  }
+
+  async existingPhoneOrEmail(email: string) {
+    return this.User.findOne({ email: email });
   }
 
   getSafeParameters(user: User) {
@@ -116,9 +94,7 @@ export class UsersService {
       devices: undefined,
       type: undefined,
       password: undefined,
-      status: undefined,
       roles: undefined,
     };
   }
-
 }

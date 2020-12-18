@@ -9,7 +9,7 @@ import { generateUnixTimestamp } from '../../utils/generateUnixTimestamp';
 import { UsersService } from '../users/users.service';
 import generator from 'generate-password';
 import { MailerService } from '@nestjs-modules/mailer';
-import { FromMail, PasswordSubject, PasswordBody, PasswordHtml } from 'src/consts/mailer-message';
+import { FromMail, PasswordBody, PasswordHtml, PasswordSubject } from 'src/consts/mailer-message';
 
 @Injectable()
 export class EmployeesService {
@@ -29,11 +29,11 @@ export class EmployeesService {
     const employee = new CreateEmployeeUserDto(
       createEmployeeDto.name,
       createEmployeeDto.surname,
-      createEmployeeDto.phone,
       createEmployeeDto.email,
       UserTypeEnum.BRANCH_ADMIN,
+      generatedPassword,
       createEmployeeDto.gender,
-      generatedPassword
+      createEmployeeDto.phone,
     );
     this.mailerService.sendMail({
       to: createEmployeeDto.email,

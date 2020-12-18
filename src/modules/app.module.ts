@@ -13,6 +13,9 @@ import { EmployeesModule } from './employees/employees.module';
 import { NewnessModule } from './newnesses/newness.module';
 import { ProductsModule } from './products/products.module';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { RoomsModule } from './rooms/rooms.module';
+import { ChatsModule } from './chats/chats.module';
+import { ShoppingCartsModule } from './shopping-carts/shopping-carts.module';
 
 @Module({
   imports: [
@@ -40,10 +43,9 @@ import { MailerModule } from '@nestjs-modules/mailer';
     EmployeesModule,
     NewnessModule,
     ProductsModule,
-    //TODO
-    //RoomsModule,
-    //ShoppingCartsModule,
-    //ChatsModule,
+    RoomsModule,
+    ShoppingCartsModule,
+    ChatsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

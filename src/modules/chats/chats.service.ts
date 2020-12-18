@@ -22,8 +22,10 @@ export class ChatsService {
 
   async history(fromUser: User, toUser: User, limit = 30) {
     const chats = await this.ChatModel.find({
-      fromUser: fromUser._id,
-      toUser: toUser._id,
+      $or: [
+        { fromUser: fromUser._id, toUser: toUser._id },
+        { fromUser: toUser._id, toUser: fromUser._id },
+      ],
       deleted_at: null,
     }).limit(limit);
     if (!chats) {

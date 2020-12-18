@@ -1,9 +1,9 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { generateUnixTimestamp } from '../../../utils/generateUnixTimestamp';
 import { v4 as uuid4 } from 'uuid';
-import { Product } from '../../products/schema/product.schema';
 import { User } from '../../users/schemas/user.schema';
+import { Product } from '../../products/schema/product.schema';
 
 @Schema()
 export class ShoppingCart extends Document {
@@ -40,6 +40,9 @@ export class ShoppingCart extends Document {
   deleted_at: number;
 }
 
+export const ShoppingCartSchema = SchemaFactory.createForClass(ShoppingCart);
+
+
 export interface StatusOrder {
   status: StatusTypeOrder,
   comments?: string
@@ -72,5 +75,3 @@ export const generateStatusOrderModel = (status: StatusTypeOrder, timestamp: num
   timestamp,
   comments,
 });
-
-export const ShoppingCartSchema = SchemaFactory.createForClass(ShoppingCart);

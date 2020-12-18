@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { ACGuard, UseRoles } from 'nest-access-control';
@@ -20,8 +20,8 @@ export class UsersController {
     possession: 'any',
   })
   @Get()
-  async list() {
-    return this.usersService.list({});
+  async list(@Request() req) {
+    return this.usersService.list({}, req?.start, req?.items);
   }
 
   @UseGuards(JwtAuthGuard, ACGuard)
@@ -68,5 +68,15 @@ export class UsersController {
     return await this.usersService.delete(id);
   }
 
-
+  @UseGuards(JwtAuthGuard, ACGuard)
+  @UseRoles({
+    resource: 'users',
+    action: 'update',
+    possession: 'any',
+  })
+  @Put('updateStatus')
+  async updateStatus(@Request() req) {
+    const user = await this.usersService.findById(req?.query?.user?._id);
+    return await this.usersService.updateStatus(user, req?.query?.user?.status);
+  }
 }

@@ -41,7 +41,7 @@ export class ChatsGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
       data.message,
     );
     await this.chatsService.create(chat);
-    this.server.to(room._id).emit('sendMessage', chat);
+    this.server.to(room._id).emit('msgFromServer', chat);
   }
 
   @SubscribeMessage('joinRoom')
@@ -55,10 +55,9 @@ export class ChatsGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 
     if (!room) {
       const newRoom = await this.roomsService.create(userFrom, toUser);
-      client.join(newRoom._id);
+      return client.join(newRoom._id);
     }
-
-    client.join(room._id);
+    return client.join(room._id);
   }
 
   afterInit() {

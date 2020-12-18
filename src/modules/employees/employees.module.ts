@@ -14,7 +14,6 @@ import { BranchOfficesModule } from '../branch-offices/branch-offices.module';
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
       { name: BranchOffice.name, schema: BranchOfficeSchema },
-      { name: User.name, schema: UserSchema },
     ]),
     UsersModule,
     BranchOfficesModule
