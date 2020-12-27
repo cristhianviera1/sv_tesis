@@ -21,7 +21,7 @@ export class UsersController {
   })
   @Get()
   async list(@Request() req) {
-    return this.usersService.list({}, req?.start, req?.items);
+    return this.usersService.list({ deleted_at: null }, req?.start, req?.items);
   }
 
   @UseGuards(JwtAuthGuard, ACGuard)

@@ -3,7 +3,7 @@ import { IsNotEmpty } from 'class-validator';
 
 export class UpdateUserDto {
   @IsNotEmpty({ message: 'El campo id es requerido' })
-  _id: string;
+  id: string;
 
   @IsNotEmpty({ message: 'El campo nombre es requerido' })
   name: string;
@@ -27,5 +27,10 @@ export class UpdateUserDto {
   @IsNotEmpty({ message: 'El campo rol es requerido' })
   roles: UserType;
 
+  @IsNotEmpty({ message: 'El campo fecha de nacimiento es requerido' })
+  birthday: number;
+
   gender?: UserGender;
+
+  image?: string;
 }

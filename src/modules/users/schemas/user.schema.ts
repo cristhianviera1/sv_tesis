@@ -21,9 +21,6 @@ export class User extends Document {
   @Prop({ required: true })
   password: string;
 
-  @Prop()
-  phone?: string;
-
   @Prop({ required: true })
   email: string;
 
@@ -41,6 +38,9 @@ export class User extends Document {
 
   @Prop()
   birthday?: number;
+
+  @Prop()
+  image?: string;
 
   @Prop({
     type: 'number',

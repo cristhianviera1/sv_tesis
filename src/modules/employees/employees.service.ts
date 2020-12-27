@@ -30,6 +30,7 @@ export class EmployeesService {
       createEmployeeDto.name,
       createEmployeeDto.surname,
       createEmployeeDto.email,
+      createEmployeeDto.birthday,
       UserTypeEnum.BRANCH_ADMIN,
       generatedPassword,
       createEmployeeDto.gender,
@@ -99,7 +100,6 @@ export class EmployeesService {
     employee.dni = updateEmployeeDto.dni;
     employee.name = updateEmployeeDto.name;
     employee.gender = updateEmployeeDto.gender;
-    employee.phone = updateEmployeeDto.phone;
     employee.email = updateEmployeeDto.email;
     return await employee.save();
   }

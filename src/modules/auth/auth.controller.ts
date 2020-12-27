@@ -47,7 +47,6 @@ export class AuthController {
       surname: user.surname,
       birthday: user.birthday,
       email: user.email,
-      phone: user.phone,
       devicesToken: user.devices,
       roles: user.roles,
       status: user.status,

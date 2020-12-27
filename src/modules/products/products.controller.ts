@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Req, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards, ValidationPipe } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { ACGuard, UseRoles } from 'nest-access-control';
@@ -31,7 +31,7 @@ export class ProductsController {
   })
   @Get()
   async list() {
-    return await this.productsService.list({});
+    return await this.productsService.list({ deleted_at: null });
   }
 
   @UseGuards(JwtAuthGuard, ACGuard)
@@ -62,7 +62,7 @@ export class ProductsController {
     action: 'delete',
     possession: 'any',
   })
-  @Put('/:id')
+  @Delete('/:id')
   async delete(@Param('id') id: string) {
     return await this.productsService.delete(id);
   }

@@ -1,3 +1,5 @@
+import { IsLatitude, IsLongitude } from 'class-validator';
+
 export class Address {
   _id: string;
   first_address: string;
@@ -5,6 +7,8 @@ export class Address {
   country: string;
   state: string;
   city: string;
+  @IsLatitude({ message: 'La latitud es inválida' })
   latitude: string;
+  @IsLongitude({ message: 'La longitud es inválida' })
   longitude: string;
 }

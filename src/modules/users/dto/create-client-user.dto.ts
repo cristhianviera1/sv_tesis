@@ -50,13 +50,12 @@ export class CreateClientUserDto extends CreateUserDto {
   birthday: number;
 
   constructor(name: string, surname: string, email: string, roles: UserType, password: string, status: boolean, birthday: number) {
-    super(name, surname, email, roles, password);
+    super(name, surname, email, birthday, roles, password);
     this.name = name;
     this.surname = surname;
     this.password = password;
     this.email = email;
     this.status = status;
     this.roles = roles;
-    this.birthday = birthday;
   }
 }

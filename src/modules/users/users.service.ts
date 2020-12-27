@@ -19,17 +19,18 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    if (await this.existingPhoneOrEmail(createUserDto?.email)) {
+    if (await this.existingEmail(createUserDto?.email)) {
       throw new ConflictException('Ya existe un usuario con ese correo electrónico.');
     }
     const user = new CreateUserDto(
       createUserDto.name,
       createUserDto.surname,
       createUserDto.email,
+      createUserDto.birthday,
       createUserDto.roles,
       createUserDto.password,
       createUserDto.gender,
-      createUserDto.phone,
+      createUserDto.image,
     );
     const createdUser = new this.User(user);
     return createdUser.save();
@@ -54,15 +55,15 @@ export class UsersService {
   async delete(id: string) {
     const user = await this.findOne({ _id: id });
     user.deleted_at = generateUnixTimestamp();
-    return user;
+    return user.save();
   }
 
   async update(updateUserDto: UpdateUserDto) {
-    const user = await this.findOne({ _id: updateUserDto._id });
+    const user = await this.findOne({ _id: updateUserDto.id });
     if (!user) {
       throw new NotFoundException('No se ha encontrado el usuario específicado');
     }
-    if (updateUserDto.email !== user.email && updateUserDto.phone !== user.phone && !!!(await this.existingPhoneOrEmail(updateUserDto.email))) {
+    if (updateUserDto.email !== user.email && !!!(await this.existingEmail(updateUserDto.email))) {
       throw new ConflictException('Ya existe un usuario con ese correo electrónico y número telefónico.');
     }
     user.name = updateUserDto.name;
@@ -70,12 +71,13 @@ export class UsersService {
     if (updateUserDto.password) {
       user.password = bcrypt.hashSync(updateUserDto.password, 10);
     }
-    user.phone = updateUserDto.phone;
     user.email = updateUserDto.email;
     user.status = updateUserDto.status;
     user.devices = updateUserDto.devices;
     user.roles = updateUserDto.roles;
+    user.birthday = updateUserDto.birthday;
     user.gender = updateUserDto.gender;
+    user.image = updateUserDto.image;
     return await user.save();
   }
 
@@ -84,7 +86,7 @@ export class UsersService {
     return await user.save();
   }
 
-  async existingPhoneOrEmail(email: string) {
+  async existingEmail(email: string) {
     return this.User.findOne({ email: email });
   }
 
