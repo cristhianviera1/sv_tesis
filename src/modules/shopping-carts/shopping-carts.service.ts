@@ -1,6 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { generateStatusOrderModel, ShoppingCart, StatusTypeOrderEnum } from './schema/shopping-cart.schema';
+import {
+  generateStatusOrderModel,
+  ShoppingCart,
+  StatusTypeOrderEnum,
+  StatusVoucherEnum,
+} from './schema/shopping-cart.schema';
 import { FilterQuery, Model } from 'mongoose';
 import CreateShoppingCartRequestDto from './dto/create-shopping-cart-request.dto';
 import { UsersService } from '../users/users.service';
@@ -8,7 +13,8 @@ import { ProductsService } from '../products/products.service';
 import { User } from '../users/schemas/user.schema';
 import { generateUnixTimestamp } from '../../utils/generateUnixTimestamp';
 import { CreateShoppingCartDto } from './dto/create-shopping-cart.dto';
-import UpdateShoppingCartStatus from './dto/update-shopping-cart-status';
+import UpdateShoppingCartStatusDto from './dto/update-shopping-cart-status.dto';
+import UpdateVoucherStatusDto from './dto/update-voucher-status.dto';
 
 @Injectable()
 export class ShoppingCartsService {
@@ -50,17 +56,32 @@ export class ShoppingCartsService {
         StatusTypeOrderEnum.WAITING_CONTACT,
         generateUnixTimestamp(),
       ),
+      {
+        statuses: [{
+          created_at: generateUnixTimestamp(),
+          status: StatusVoucherEnum.WAIGTING_VAUCHER,
+        }],
+      },
       total,
     );
     return await this.ShoppingCartModel.create(newShoppingCart);
   }
 
-  async updateStatus(changedBy: User, cart_id: string, updateShoppingCartStatus: UpdateShoppingCartStatus) {
+  async uploadVoucherImage(image: string, shoppingCart: ShoppingCart) {
+    shoppingCart.voucher.image = image;
+    shoppingCart.markModified('voucher');
+    return await shoppingCart.save();
+  }
+
+  async updateStatus(changedBy: User, cart_id: string, updateShoppingCartStatus: UpdateShoppingCartStatusDto) {
     const order = await this.findOne({
       _id: cart_id,
       'status.status': { $nin: [StatusTypeOrderEnum.DELIVERED, StatusTypeOrderEnum.CANCELED] },
       deleted_at: null,
     });
+    if (!order.voucher.statuses.some((status) => status.status === StatusVoucherEnum.APPROVED)) {
+      throw new ConflictException('No se puede actualizar el estado de entrega hasta que el comprobante del depósito haya sido verificado');
+    }
     order.status.push(
       generateStatusOrderModel(
         updateShoppingCartStatus.status,
@@ -73,5 +94,21 @@ export class ShoppingCartsService {
     }
     order.markModified('status');
     return await order.save();
+  }
+
+  async updateVoucherStatus(changedBy: User, shoppingCart: ShoppingCart, updateVoucherStatusDto: UpdateVoucherStatusDto) {
+    const canUpdate = !shoppingCart.voucher.statuses.some((status) =>
+      status.status === StatusVoucherEnum.DENIED || status.status === StatusVoucherEnum.APPROVED,
+    );
+    if (canUpdate) {
+      throw new ConflictException(`El comprobante de pago ya ha sido ${updateVoucherStatusDto.status}`);
+    }
+    shoppingCart.voucher.statuses.push({
+      status: updateVoucherStatusDto.status,
+      description: `${updateVoucherStatusDto.description}. Actualizado por: ${changedBy.name} ${changedBy.surname}, con email: ${changedBy.email}`,
+      created_at: generateUnixTimestamp(),
+    });
+    shoppingCart.markModified('voucher');
+    return await shoppingCart.save();
   }
 }

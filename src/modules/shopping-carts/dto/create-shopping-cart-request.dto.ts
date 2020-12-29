@@ -9,15 +9,17 @@ export default class CreateShoppingCartRequestDto {
   @IsNotEmpty({ message: 'El detalle de los productos son requeridos' })
   products: ProductDetail[];
   status: StatusOrder;
+  voucher_image: string;
   total: number;
   created_at: number;
   updated_at: number;
   deleted_at: number;
 
-  constructor(user: User, products: ProductDetail[], status: StatusOrder) {
+  constructor(user: User, products: ProductDetail[], status: StatusOrder, voucher_image: string) {
     this._id = uuid4();
     this.user = user;
     this.products = products;
     this.status = status;
+    this.voucher_image = voucher_image;
   }
 }

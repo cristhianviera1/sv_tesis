@@ -1,6 +1,6 @@
 import { StatusTypeOrder, StatusTypeOrderEnum } from '../schema/shopping-cart.schema';
 
-export default class UpdateShoppingCartStatus {
+export default class UpdateShoppingCartStatusDto {
   status: StatusTypeOrder;
 }
 export const rulesToUpdate = {

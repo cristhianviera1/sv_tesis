@@ -19,6 +19,9 @@ export class ShoppingCart extends Document {
   @Prop({ required: true })
   status: StatusOrder[];
 
+  @Prop()
+  voucher: VoucherDetail;
+
   @Prop({ required: true })
   total: number;
 
@@ -54,6 +57,17 @@ export interface ProductDetail {
   quantity: number,
 }
 
+export interface VoucherDetail {
+  statuses: VoucherStatus[],
+  image?: string,
+}
+
+export interface VoucherStatus {
+  status: StatusVoucherType,
+  description?: string,
+  created_at: number
+}
+
 export type StatusTypeOrder =
   | 'esperando contacto'
   | 'en contacto'
@@ -68,6 +82,19 @@ export enum StatusTypeOrderEnum {
   DELIVERY_PENDING = 'pendiente entrega',
   DELIVERED = 'entregado',
   CANCELED = 'anulado',
+}
+
+export type StatusVoucherType =
+  | 'pendiente comprobante'
+  | 'pendiente aprobación'
+  | 'aprobado'
+  | 'denegado'
+
+export enum StatusVoucherEnum {
+  WAIGTING_VAUCHER = 'pendiente comprobante',
+  WAITING_APROVAL = 'pendiente aprobación',
+  APPROVED = 'aprobado',
+  DENIED = 'denegado',
 }
 
 export const generateStatusOrderModel = (status: StatusTypeOrder, timestamp: number, comments: string = undefined): StatusOrder => ({
