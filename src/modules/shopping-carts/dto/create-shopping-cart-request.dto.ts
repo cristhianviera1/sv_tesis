@@ -1,7 +1,12 @@
 import { IsNotEmpty } from 'class-validator';
 import { v4 as uuid4 } from 'uuid';
-import { ProductDetail, StatusOrder } from '../schema/shopping-cart.schema';
+import { StatusOrder } from '../schema/shopping-cart.schema';
 import { User } from '../../users/schemas/user.schema';
+
+interface ProductDetail {
+  productID: string,
+  quantity: number
+}
 
 export default class CreateShoppingCartRequestDto {
   _id: string;

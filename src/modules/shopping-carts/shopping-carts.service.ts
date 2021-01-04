@@ -2,6 +2,7 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { InjectModel } from '@nestjs/mongoose';
 import {
   generateStatusOrderModel,
+  ProductDetail,
   ShoppingCart,
   StatusTypeOrderEnum,
   StatusVoucherEnum,
@@ -44,14 +45,19 @@ export class ShoppingCartsService {
 
   async create(createShoppingCartDto: CreateShoppingCartRequestDto, user: User) {
     let total = 0;
+    const productsDetail: ProductDetail[] = [];
     for (let i = 0; i < createShoppingCartDto.products.length; i++) {
       const productDetail = createShoppingCartDto.products[i];
-      const productEntity = await this.productsService.findById(productDetail.product._id);
+      const productEntity = await this.productsService.findById(productDetail.productID);
+      productsDetail.push({
+        product: this.productsService.getSafeParamteres(productEntity),
+        quantity: productDetail.quantity,
+      });
       total += (productEntity.price * productDetail.quantity);
     }
     const newShoppingCart = new CreateShoppingCartDto(
-      user,
-      createShoppingCartDto.products,
+      this.usersService.getSafeParameters(user),
+      productsDetail,
       generateStatusOrderModel(
         StatusTypeOrderEnum.WAITING_CONTACT,
         generateUnixTimestamp(),

@@ -34,8 +34,8 @@ export class ShoppingCartsController {
     possession: 'own',
   })
   @Get('me')
-  async myShoppingCart(@Request() req) {
-    return this.shoppingCartsService.list({ user: req?.user?._id });
+  myShoppingCart(@Request() req) {
+    return this.shoppingCartsService.list({ 'user._id': req?.user?._id });
   }
 
   @UseGuards(JwtAuthGuard, ACGuard)

@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   InternalServerErrorException,
+  Param,
   Post,
   Request,
   UseGuards,
@@ -17,7 +18,14 @@ import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { CreateClientUserDto } from '../users/dto/create-client-user.dto';
-import { FromMail, PasswordBody, PasswordHtml, PasswordSubject } from 'src/consts/mailer-message';
+import {
+  FromMail,
+  PasswordBody,
+  PasswordHtml,
+  PasswordRecoverSubject,
+  PasswordSubject,
+  PassworReciverdHtml,
+} from 'src/consts/mailer-message';
 import { MailerService } from '@nestjs-modules/mailer';
 import { generateRandomPassword } from '../../utils/generatePassword';
 
@@ -70,6 +78,7 @@ export class AuthController {
       generatedPassword,
       true,
       createClientUserDto.birthday,
+      createClientUserDto.gender,
     );
     const createdUser = await this.userService.create(client);
     this.mailerService.sendMail({
@@ -86,10 +95,31 @@ export class AuthController {
     return await createdUser.save();
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('me')
-  getMe(@Request() req) {
-    return req.user;
+  @ApiProperty()
+  @Get('recover/:email')
+  async recoverPass(@Param('email') email: string) {
+    const generatedPassword = generateRandomPassword();
+    const userEmail = email.toLocaleLowerCase().trim();
+    const user = await this.userService.findOne({ email: userEmail });
+    this.mailerService.sendMail({
+      to: userEmail,
+      from: FromMail,
+      subject: PasswordRecoverSubject,
+      html: `${PassworReciverdHtml} <br/><p>${PasswordBody(generatedPassword)}</p>`,
+    })
+      .then((message) => console.info(message, 'Password send to client email'))
+      .catch((err) => {
+        console.warn('No se pudo enviar el correo electrónico', err);
+        throw new InternalServerErrorException('No se ha podido enviar el correo electrónico, por favor solicite que se envia nuevamente');
+      });
+    user.password = generatedPassword;
+    return true;
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async getMe(@Request() req) {
+    const user = await this.userService.findById(req?.user?._id);
+    return this.userService.getSafeParameters(user);
+  }
 }

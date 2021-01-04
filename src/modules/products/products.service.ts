@@ -57,4 +57,15 @@ export class ProductsService {
     await product.save();
     return true;
   }
+
+  getSafeParamteres(product: Product) {
+    return {
+      ...product.toObject(),
+      stock: undefined,
+      status: undefined,
+      created_at: undefined,
+      updated_at: undefined,
+      deleted_at: undefined,
+    };
+  }
 }

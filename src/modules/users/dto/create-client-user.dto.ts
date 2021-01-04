@@ -1,5 +1,5 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
-import CreateUserDto, { UserType } from './create-user.dto';
+import CreateUserDto, { UserGender, UserType } from './create-user.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateClientUserDto extends CreateUserDto {
@@ -12,30 +12,15 @@ export class CreateClientUserDto extends CreateUserDto {
   @IsNotEmpty({ message: 'El apellido es requerido' })
   surname: string;
 
-  /*  @ApiProperty()
-    @IsString({ message: 'La contraseña es requerida' })
-    @MaxLength(20, {
-      message: 'La contraseña debe tener un maximo de 20 caracteres',
-    })
-    @MinLength(8, {
-      message: 'La contraseña debe tener un mínimo de 8 caracteres',
-    })
-    @IsNotEmpty({ message: 'La contraseña es requerida' })
-    password: string;*/
-
-  /*
-    @ApiProperty()
-    @IsPhoneNumber('EC', { message: 'El número celular es inválido' })
-    @IsNotEmpty({ message: 'El número celular es requerido' })
-    phone: string;
-  */
-
   @ApiProperty()
   @IsEmail(undefined, {
     message: 'El correo electrónico es inválido',
   })
   @IsNotEmpty({ message: 'El correo electrónico es requerido' })
   email: string;
+
+  @ApiProperty()
+  gender?: UserGender;
 
   status?: boolean;
 
@@ -49,7 +34,7 @@ export class CreateClientUserDto extends CreateUserDto {
   @IsNotEmpty({ message: 'La fecha de nacimiento es obligatoria' })
   birthday: number;
 
-  constructor(name: string, surname: string, email: string, roles: UserType, password: string, status: boolean, birthday: number) {
+  constructor(name: string, surname: string, email: string, roles: UserType, password: string, status: boolean, birthday: number, gender: UserGender) {
     super(name, surname, email, birthday, roles, password);
     this.name = name;
     this.surname = surname;
@@ -57,5 +42,6 @@ export class CreateClientUserDto extends CreateUserDto {
     this.email = email;
     this.status = status;
     this.roles = roles;
+    this.gender = gender;
   }
 }

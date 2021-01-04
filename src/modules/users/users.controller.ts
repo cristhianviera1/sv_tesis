@@ -1,9 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards, ValidationPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { ACGuard, UseRoles } from 'nest-access-control';
 import CreateUserDto from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import UpdateImageUserDto from './dto/update-image-user.dto';
+import UpdatePasswordUserDto from './dto/update-password-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -21,7 +23,11 @@ export class UsersController {
   })
   @Get()
   async list(@Request() req) {
-    return this.usersService.list({ deleted_at: null }, req?.start, req?.items);
+    const users = await this.usersService.list({ deleted_at: null }, req?.start, req?.items);
+    return users.map((user) => ({
+      ...this.usersService.getSafeParameters(user),
+      roles: user.roles,
+    }));
   }
 
   @UseGuards(JwtAuthGuard, ACGuard)
@@ -79,4 +85,30 @@ export class UsersController {
     const user = await this.usersService.findById(req?.query?.user?._id);
     return await this.usersService.updateStatus(user, req?.query?.user?.status);
   }
+
+  @UseGuards(JwtAuthGuard, ACGuard)
+  @UseRoles({
+    resource: 'users',
+    action: 'update',
+    possession: 'own',
+  })
+  @Put('updateImage')
+  async updateImage(@Request() req, @Body(ValidationPipe) updateImageUserDto: UpdateImageUserDto) {
+    const user = await this.usersService.findById(req?.user?._id);
+    return await this.usersService.updateImage(user, updateImageUserDto.image);
+  }
+
+  @UseGuards(JwtAuthGuard, ACGuard)
+  @UseRoles({
+    resource: 'users',
+    action: 'update',
+    possession: 'own',
+  })
+  @Put('updatePassword')
+  async updatePassword(@Request() req, @Body(ValidationPipe) updatePasswordUserDto: UpdatePasswordUserDto) {
+    const user = await this.usersService.findById(req?.user?._id);
+    return await this.usersService.updatePassword(user, updatePasswordUserDto);
+  }
+
+
 }

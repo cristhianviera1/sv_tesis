@@ -14,7 +14,8 @@ export default class CreateUserDto {
   @IsNotEmpty({ message: 'El campo apellido es requerido' })
   surname: string;
 
-  password: string;
+  @ApiProperty()
+  password?: string;
 
 
   @IsNotEmpty()

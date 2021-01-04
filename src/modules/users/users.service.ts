@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { User } from './schemas/user.schema';
@@ -6,11 +6,16 @@ import CreateUserDto from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { generateUnixTimestamp } from '../../utils/generateUnixTimestamp';
 import * as bcrypt from 'bcrypt';
+import { FromMail, PasswordBody, PasswordHtml, PasswordSubject } from '../../consts/mailer-message';
+import { MailerService } from '@nestjs-modules/mailer';
+import { generateRandomPassword } from '../../utils/generatePassword';
+import UpdatePasswordUserDto from './dto/update-password-user.dto';
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name)
               private User: Model<User>,
+              private readonly mailerService: MailerService,
   ) {
   }
 
@@ -22,16 +27,30 @@ export class UsersService {
     if (await this.existingEmail(createUserDto?.email)) {
       throw new ConflictException('Ya existe un usuario con ese correo electrónico.');
     }
+    const password = createUserDto.password || generateRandomPassword();
     const user = new CreateUserDto(
       createUserDto.name,
       createUserDto.surname,
       createUserDto.email,
       createUserDto.birthday,
       createUserDto.roles,
-      createUserDto.password,
+      password,
       createUserDto.gender,
       createUserDto.image,
     );
+    if (!createUserDto.password) {
+      this.mailerService.sendMail({
+        to: createUserDto.email,
+        from: FromMail,
+        subject: PasswordSubject,
+        html: `${PasswordHtml} <br/><p>${PasswordBody(password)}</p>`,
+      }).then((message) => {
+        console.info(message, 'Password send to client email');
+      }).catch((err) => {
+        console.warn('No se pudo enviar el correo electrónico', err);
+        throw new InternalServerErrorException('No se ha podido enviar el correo electrónico, por favor solicite que se envia nuevamente');
+      });
+    }
     const createdUser = new this.User(user);
     return createdUser.save();
   }
@@ -86,6 +105,21 @@ export class UsersService {
     return await user.save();
   }
 
+  async updateImage(user: User, image: string) {
+    user.image = image;
+    return await user.save();
+  }
+
+  async updatePassword(user: User, updatePasswordUserDto: UpdatePasswordUserDto) {
+
+    const validSign = await bcrypt.compare(updatePasswordUserDto.oldPassword, user.password);
+    if (!validSign) {
+      throw new ConflictException('La contraseña previa no coincide');
+    }
+    user.password = bcrypt.hashSync(updatePasswordUserDto.newPassword, 10);
+    return user.save();
+  }
+
   async existingEmail(email: string) {
     return this.User.findOne({ email: email });
   }
@@ -97,6 +131,9 @@ export class UsersService {
       type: undefined,
       password: undefined,
       roles: undefined,
+      created_at: undefined,
+      updated_at: undefined,
+      deleted_at: undefined,
     };
   }
 }
