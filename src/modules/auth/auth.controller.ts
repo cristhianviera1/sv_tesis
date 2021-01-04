@@ -24,7 +24,7 @@ import {
   PasswordHtml,
   PasswordRecoverSubject,
   PasswordSubject,
-  PassworReciverdHtml,
+  PassworReceiverdHtml,
 } from 'src/consts/mailer-message';
 import { MailerService } from '@nestjs-modules/mailer';
 import { generateRandomPassword } from '../../utils/generatePassword';
@@ -105,7 +105,7 @@ export class AuthController {
       to: userEmail,
       from: FromMail,
       subject: PasswordRecoverSubject,
-      html: `${PassworReciverdHtml} <br/><p>${PasswordBody(generatedPassword)}</p>`,
+      html: `${PassworReceiverdHtml} <br/><p>${PasswordBody(generatedPassword)}</p>`,
     })
       .then((message) => console.info(message, 'Password send to client email'))
       .catch((err) => {

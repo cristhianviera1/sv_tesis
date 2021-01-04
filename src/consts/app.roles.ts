@@ -22,13 +22,13 @@ roles
   .createOwn(['users', 'chat'])
   .updateOwn(['users', 'chat'])
   .readOwn(['users', 'chat'])
-  .readAny(['products', 'newness'])
+  .readAny(['products', 'newness', 'branchOffices'])
   .deleteOwn(['users', 'chat'])
 
   .grant(UserTypeEnum.CLIENT)
   .createOwn(['users', 'shopping-carts', 'chat'])
   .deleteOwn(['users', 'shopping-carts', 'chat'])
   .readOwn(['users', 'shopping-carts', 'chat'])
-  .readAny(['products', 'newness'])
+  .readAny(['products', 'newness', 'branchOffices'])
   .updateOwn(['users', 'shopping-carts', 'chat'])
 ;
