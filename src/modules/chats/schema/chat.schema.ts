@@ -32,7 +32,7 @@ export class Chat extends Document {
   @Prop({ required: true })
   toUser: string;
 
-  @Prop()
+  @Prop({ required: true })
   message: Message;
 
   @Prop({
