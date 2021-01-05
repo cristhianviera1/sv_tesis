@@ -42,10 +42,7 @@ jobs:
         run: rm -rf .env
 
       - name: Create .env
-        run: echo "${{secrets.ENV_FILE_DEV}}" >> .env
-
-      - name: Add Master key
-        run: echo "${{secrets.MASTER_KEY_DEV}}" >> .env
+        run: echo "${{secrets.ENV_FILE}}" >> .env
 
       - name: Deploy
         run: yarn deploy:dev

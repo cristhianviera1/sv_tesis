@@ -3,6 +3,8 @@ service:
 
 plugins:
   - serverless-jetpack
+  - serverless-plugin-warmup
+
 
 provider:
   name: aws
