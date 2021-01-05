@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { UserGender, UserType } from '../dto/create-user.dto';
 import { v4 as uuid4 } from 'uuid';
@@ -30,10 +30,10 @@ export class User extends Document {
   @Prop({ required: false })
   devices?: string[];
 
-  @Prop({ required: true })
+  @Prop({ required: true, type: mongoose.Schema.Types.String })
   roles: UserType;
 
-  @Prop()
+  @Prop({ type: mongoose.Schema.Types.String })
   gender?: UserGender;
 
   @Prop()

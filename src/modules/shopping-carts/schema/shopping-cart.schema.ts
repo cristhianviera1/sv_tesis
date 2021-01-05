@@ -1,3 +1,4 @@
+import * as mongoose from 'mongoose';
 import { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { generateUnixTimestamp } from '../../../utils/generateUnixTimestamp';
@@ -19,7 +20,7 @@ export class ShoppingCart extends Document {
   @Prop({ required: true })
   status: StatusOrder[];
 
-  @Prop()
+  @Prop({ type: mongoose.Schema.Types.Mixed })
   voucher: VoucherDetail;
 
   @Prop({ required: true })

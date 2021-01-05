@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { State } from '../state.model';
 import { v4 as uuid4 } from 'uuid';
 
@@ -19,7 +19,7 @@ export class Country extends Document {
     @Prop({ type: 'number' })
     phone_code: number;
 
-    @Prop()
+    @Prop({ type: mongoose.Schema.Types.Array })
     states: State[];
 
     constructor(code: string, name: string, phone_code: number, states: State[]) {
