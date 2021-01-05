@@ -58,7 +58,7 @@ export class ProductsService {
     return true;
   }
 
-  getSafeParamteres(product: Product) {
+  getSafeParameters(product: Product): Product {
     return {
       ...product.toObject(),
       stock: undefined,
@@ -66,6 +66,6 @@ export class ProductsService {
       created_at: undefined,
       updated_at: undefined,
       deleted_at: undefined,
-    };
+    } as Product;
   }
 }

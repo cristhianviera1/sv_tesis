@@ -128,7 +128,6 @@ export class UsersService {
     return {
       ...user.toObject(),
       devices: undefined,
-      type: undefined,
       password: undefined,
       roles: undefined,
       created_at: undefined,

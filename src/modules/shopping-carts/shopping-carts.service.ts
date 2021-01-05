@@ -50,7 +50,7 @@ export class ShoppingCartsService {
       const productDetail = createShoppingCartDto.products[i];
       const productEntity = await this.productsService.findById(productDetail.productID);
       productsDetail.push({
-        product: this.productsService.getSafeParamteres(productEntity),
+        product: this.productsService.getSafeParameters(productEntity),
         quantity: productDetail.quantity,
       });
       total += (productEntity.price * productDetail.quantity);
