@@ -124,7 +124,7 @@ export class UsersService {
     return this.User.findOne({ email: email });
   }
 
-  getSafeParameters(user: User) {
+  getSafeParameters(user: User): User {
     return {
       ...user.toObject(),
       devices: undefined,
@@ -134,6 +134,6 @@ export class UsersService {
       created_at: undefined,
       updated_at: undefined,
       deleted_at: undefined,
-    };
+    } as User;
   }
 }

@@ -86,7 +86,7 @@ export class BranchOfficesService {
       created_at: undefined,
       updated_at: undefined,
       deleted_at: undefined,
-    };
+    } as BranchOffice;
   }
 
 }
