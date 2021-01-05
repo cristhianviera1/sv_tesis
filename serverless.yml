@@ -1,0 +1,52 @@
+service:
+  name: tesis-backend
+
+plugins:
+  - serverless-jetpack
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-east-1
+  stage: ${opt:stage, 'dev'}
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 'lambda:InvokeFunction'
+      Resource: "*"
+
+package:
+  excludeDevDependencies: true
+  exclude:
+    - .github/**
+    - .serverless/**
+    - test/**
+    - .idea/**
+    - src/**
+
+functions:
+  main:
+    handler: dist/serverless.handler
+    timeout: 15
+    warmup: true
+    events:
+      - http:
+          method: post
+          path: /{any+}
+          cors: true
+      - http:
+          method: put
+          path: /{any+}
+          cors: true
+      - http:
+          method: delete
+          path: /{any+}
+          cors: true
+      - http:
+          method: get
+          path: /{any+}
+          cors: true
+    tags:
+      app: sv
+      stage: ${opt:stage, 'dev'}
+      app-area: backend
