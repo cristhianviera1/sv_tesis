@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards, ValidationPipe } from '@nestjs/common';
 import { NewnessService } from './newness.service';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { ACGuard, UseRoles } from 'nest-access-control';
@@ -39,8 +39,19 @@ export class NewnessController {
     possession: 'any',
   })
   @Get()
-  list() {
-    return this.newnessService.list();
+  async list(@Request() req) {
+    const startDate = req?.query?.start_date;
+    const endDate = req?.query?.end_date;
+    if (startDate && endDate) {
+      return await this.newnessService.list({
+        deleted_at: null,
+        created_at: {
+          $gte: Number(startDate),
+          $lte: Number(endDate),
+        },
+      });
+    }
+    return await this.newnessService.list({ deleted_at: null });
   }
 
   @UseGuards(JwtAuthGuard, ACGuard)

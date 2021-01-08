@@ -8,6 +8,7 @@ import { BranchOfficesService } from '../branch-offices/branch-offices.service';
 import { UsersService } from '../users/users.service';
 import { UsersModule } from '../users/users.module';
 import { BranchOfficesModule } from '../branch-offices/branch-offices.module';
+import { MailerAwsService } from '../../utils/mailerService';
 
 @Module({
   imports: [
@@ -16,9 +17,9 @@ import { BranchOfficesModule } from '../branch-offices/branch-offices.module';
       { name: BranchOffice.name, schema: BranchOfficeSchema },
     ]),
     UsersModule,
-    BranchOfficesModule
+    BranchOfficesModule,
   ],
-  providers: [EmployeesService, BranchOfficesService, UsersService],
-  controllers: [EmployeesController]
+  providers: [EmployeesService, BranchOfficesService, UsersService, MailerAwsService],
+  controllers: [EmployeesController],
 })
 export class EmployeesModule {}

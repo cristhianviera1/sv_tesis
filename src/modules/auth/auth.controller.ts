@@ -3,7 +3,6 @@ import {
   Body,
   Controller,
   Get,
-  InternalServerErrorException,
   Param,
   Post,
   Request,
@@ -19,15 +18,14 @@ import { SignInDto } from './dto/sign-in.dto';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { CreateClientUserDto } from '../users/dto/create-client-user.dto';
 import {
-  FromMail,
   PasswordBody,
   PasswordHtml,
   PasswordRecoverSubject,
   PasswordSubject,
   PassworReceiverdHtml,
 } from 'src/consts/mailer-message';
-import { MailerService } from '@nestjs-modules/mailer';
 import { generateRandomPassword } from '../../utils/generatePassword';
+import { MailerAwsService } from '../../utils/mailerService';
 
 @Controller('auth')
 export class AuthController {
@@ -35,7 +33,7 @@ export class AuthController {
     private userService: UsersService,
     private authService: AuthService,
     private jwtService: JwtService,
-    private readonly mailerService: MailerService,
+    private readonly mailerService: MailerAwsService,
   ) {
   }
 
@@ -81,17 +79,11 @@ export class AuthController {
       createClientUserDto.gender,
     );
     const createdUser = await this.userService.create(client);
-    this.mailerService.sendMail({
-      to: createClientUserDto.email,
-      from: FromMail,
-      subject: PasswordSubject,
-      html: `${PasswordHtml} <br/><p>${PasswordBody(generatedPassword)}</p>`,
-    }).then((message) => {
-      console.info(message, 'Password send to client email');
-    }).catch((err) => {
-      console.warn('No se pudo enviar el correo electrónico', err);
-      throw new InternalServerErrorException('No se ha podido enviar el correo electrónico, por favor solicite que se envia nuevamente');
-    });
+    this.mailerService.sendMail(
+      createClientUserDto.email,
+      PasswordSubject,
+      `${PasswordHtml} <br/><p>${PasswordBody(generatedPassword)}</p>`,
+    );
     return await createdUser.save();
   }
 
@@ -101,17 +93,11 @@ export class AuthController {
     const generatedPassword = generateRandomPassword();
     const userEmail = email.toLocaleLowerCase().trim();
     const user = await this.userService.findOne({ email: userEmail });
-    this.mailerService.sendMail({
-      to: userEmail,
-      from: FromMail,
-      subject: PasswordRecoverSubject,
-      html: `${PassworReceiverdHtml} <br/><p>${PasswordBody(generatedPassword)}</p>`,
-    })
-      .then((message) => console.info(message, 'Password send to client email'))
-      .catch((err) => {
-        console.warn('No se pudo enviar el correo electrónico', err);
-        throw new InternalServerErrorException('No se ha podido enviar el correo electrónico, por favor solicite que se envia nuevamente');
-      });
+    this.mailerService.sendMail(
+      userEmail,
+      PasswordRecoverSubject,
+      `${PassworReceiverdHtml} <br/><p>${PasswordBody(generatedPassword)}</p>`,
+    );
     user.password = generatedPassword;
     return true;
   }

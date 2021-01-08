@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../users/schemas/user.schema';
 import { Model } from 'mongoose';
@@ -8,15 +8,15 @@ import { UserTypeEnum } from '../users/dto/create-user.dto';
 import { generateUnixTimestamp } from '../../utils/generateUnixTimestamp';
 import { UsersService } from '../users/users.service';
 import generator from 'generate-password';
-import { MailerService } from '@nestjs-modules/mailer';
-import { FromMail, PasswordBody, PasswordHtml, PasswordSubject } from 'src/consts/mailer-message';
+import { PasswordBody, PasswordSubject } from 'src/consts/mailer-message';
+import { MailerAwsService } from '../../utils/mailerService';
 
 @Injectable()
 export class EmployeesService {
   constructor(
     @InjectModel(User.name) private employeeModel: Model<User>,
     private readonly usersService: UsersService,
-    private readonly mailerService: MailerService
+    private readonly mailerService: MailerAwsService,
   ) {
   }
 
@@ -36,17 +36,7 @@ export class EmployeesService {
       createEmployeeDto.gender,
       createEmployeeDto.phone,
     );
-    this.mailerService.sendMail({
-      to: createEmployeeDto.email,
-      from: FromMail,
-      subject: PasswordSubject,
-      text: PasswordBody(generatedPassword),
-      html: PasswordHtml,
-    }).then((message) => {
-      console.info(message);
-    }).catch(() => {
-      throw new InternalServerErrorException('No se ha podido enviar el correo electrónico, por favor solicite que se envia nuevamente');
-    });
+    this.mailerService.sendMail(createEmployeeDto.email, PasswordSubject, PasswordBody(generatedPassword));
     const createdEmployee = await this.employeeModel.create(employee);
     return createdEmployee.save();
   }

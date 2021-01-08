@@ -6,6 +6,7 @@ import { Room, RoomSchema } from './schema/room.schema';
 import { UsersService } from '../users/users.service';
 import { User, UserSchema } from '../users/schemas/user.schema';
 import { UsersModule } from '../users/users.module';
+import { MailerAwsService } from '../../utils/mailerService';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { UsersModule } from '../users/users.module';
     UsersModule,
   ],
   controllers: [RoomsController],
-  providers: [RoomsService, UsersService],
+  providers: [RoomsService, UsersService, MailerAwsService],
 })
 export class RoomsModule {
 }

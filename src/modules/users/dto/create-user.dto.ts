@@ -41,7 +41,7 @@ export default class CreateUserDto {
   @IsOptional()
   image?: string;
 
-  constructor(name: string, surname: string, email: string, birthday: number, roles: UserType, password: string, gender?: UserGender, image?: string) {
+  constructor(name: string, surname: string, email: string, birthday: number, roles: UserType, password: string, gender?: UserGender, image?: string, status?: boolean) {
     this._id = uuid4();
     this.name = name;
     this.surname = surname;
@@ -53,6 +53,7 @@ export default class CreateUserDto {
     if (password) {
       this.password = bcrypt.hashSync(password, 10);
     }
+    this.status = status;
   }
 }
 

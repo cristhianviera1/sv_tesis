@@ -14,7 +14,21 @@ export class BranchOfficesService {
 
   async create(createBranchOffice: CreateBranchOfficeDto): Promise<BranchOffice> {
     await this.findIfExist({ $or: [{ email: createBranchOffice.email }, { name: createBranchOffice.name }] }, 'nombre o correo');
-    const createdBranch = new this.branchOffice(createBranchOffice);
+    const address = {
+      first_address: createBranchOffice.first_address,
+      second_address: createBranchOffice.second_address,
+      country: createBranchOffice.country,
+      state: createBranchOffice.state,
+      city: createBranchOffice.city,
+      latitude: createBranchOffice.latitude,
+      longitude: createBranchOffice.longitude,
+    };
+    const newBranch = new CreateBranchOfficeDto(
+      createBranchOffice.name,
+      createBranchOffice.email,
+      address,
+    );
+    const createdBranch = new this.branchOffice(newBranch);
     return createdBranch.save();
   }
 
@@ -68,7 +82,15 @@ export class BranchOfficesService {
     }
     branchOffice.name = updateBranchOffice.name;
     branchOffice.email = updateBranchOffice.email;
-    branchOffice.address = updateBranchOffice.address;
+    branchOffice.address = {
+      first_address: updateBranchOffice.first_address,
+      second_address: updateBranchOffice.second_address,
+      country: updateBranchOffice.country,
+      state: updateBranchOffice.state,
+      city: updateBranchOffice.city,
+      latitude: updateBranchOffice.latitude,
+      longitude: updateBranchOffice.longitude,
+    };
     branchOffice.updated_at = generateUnixTimestamp();
     return branchOffice.save();
   }

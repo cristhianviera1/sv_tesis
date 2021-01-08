@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { JwtStrategy } from '../../strategies/jwt-auth.strategy';
+import { MailerAwsService } from '../../utils/mailerService';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { JwtStrategy } from '../../strategies/jwt-auth.strategy';
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, UsersService, JwtStrategy],
+  providers: [AuthService, UsersService, JwtStrategy, MailerAwsService],
 })
 export class AuthModule {
 }

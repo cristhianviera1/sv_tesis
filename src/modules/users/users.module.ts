@@ -4,6 +4,7 @@ import { JwtStrategy } from '../../strategies/jwt-auth.strategy';
 import { User, UserSchema } from './schemas/user.schema';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
+import { MailerAwsService } from '../../utils/mailerService';
 
 @Module({
   imports: [
@@ -11,7 +12,7 @@ import { UsersController } from './users.controller';
       { name: User.name, schema: UserSchema },
     ]),
   ],
-  providers: [UsersService, JwtStrategy],
+  providers: [UsersService, JwtStrategy, MailerAwsService],
   controllers: [UsersController],
 })
 export class UsersModule {

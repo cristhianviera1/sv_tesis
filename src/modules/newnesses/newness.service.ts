@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Newness } from './schema/newness.schema';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import CreateNewnessDto from './dto/create-newness.dto';
 import { generateUnixTimestamp } from '../../utils/generateUnixTimestamp';
 import UpdateNewnessDto from './dto/update-newness.dto';
@@ -29,8 +29,8 @@ export class NewnessService {
     return newness;
   }
 
-  async list() {
-    const newnesses = await this.newnessModel.find({ deleted_at: null }).sort({ created_at: -1 });
+  async list(conditions: FilterQuery<Newness>) {
+    const newnesses = await this.newnessModel.find(conditions).sort({ created_at: -1 });
     if (newnesses?.length < 1) {
       throw new NotFoundException('No se han encontrado novedades');
     }

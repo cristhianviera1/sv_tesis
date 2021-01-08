@@ -10,6 +10,7 @@ import { RoomsService } from '../rooms/rooms.service';
 import { RoomsModule } from '../rooms/rooms.module';
 import { RoomSchema } from '../rooms/schema/room.schema';
 import { ChatsGateway } from './chats.gateway';
+import { MailerAwsService } from '../../utils/mailerService';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { ChatsGateway } from './chats.gateway';
     UsersModule,
     RoomsModule,
   ],
-  providers: [ChatsService, UsersService, RoomsService, ChatsGateway],
+  providers: [ChatsService, UsersService, RoomsService, ChatsGateway, MailerAwsService],
   controllers: [ChatsController],
 })
 export class ChatsModule {

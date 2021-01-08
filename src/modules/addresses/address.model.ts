@@ -1,7 +1,6 @@
 import { IsLatitude, IsLongitude } from 'class-validator';
 
 export class Address {
-  _id: string;
   first_address: string;
   second_address?: string;
   country: string;

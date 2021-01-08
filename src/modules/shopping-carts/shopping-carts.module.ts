@@ -10,6 +10,7 @@ import { ProductsService } from '../products/products.service';
 import { Product, ProductSchema } from '../products/schema/product.schema';
 import { JwtStrategy } from '../../strategies/jwt-auth.strategy';
 import { ShoppingCart, ShoppingCartSchema } from './schema/shopping-cart.schema';
+import { MailerAwsService } from '../../utils/mailerService';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { ShoppingCart, ShoppingCartSchema } from './schema/shopping-cart.schema'
     UsersModule,
     ProductsModule,
   ],
-  providers: [ShoppingCartsService, UsersService, ProductsService, JwtStrategy],
+  providers: [ShoppingCartsService, UsersService, ProductsService, JwtStrategy, MailerAwsService],
   controllers: [ShoppingCartsController],
 })
 export class ShoppingCartsModule {

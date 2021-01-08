@@ -1,9 +1,8 @@
-import { IsEmail, IsNotEmpty } from 'class-validator';
-import { Address } from '../../addresses/address.model';
+import { IsEmail, IsLatitude, IsLongitude, IsNotEmpty } from 'class-validator';
 
 export default class UpdateBranchOfficeDto{
   @IsNotEmpty()
-  _id:string
+  _id: string
 
   @IsNotEmpty()
   name: string;
@@ -13,5 +12,24 @@ export default class UpdateBranchOfficeDto{
   email: string;
 
   @IsNotEmpty()
-  address: Address;
+  first_address: string;
+
+  second_address?: string;
+
+  @IsNotEmpty()
+  country: string;
+
+  @IsNotEmpty()
+  state: string;
+
+  @IsNotEmpty()
+  city: string;
+
+  @IsNotEmpty()
+  @IsLatitude({ message: 'La latitud es inválida' })
+  latitude: string;
+
+  @IsNotEmpty()
+  @IsLongitude({ message: 'La longitud es inválida' })
+  longitude: string;
 }

@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { User } from './schemas/user.schema';
@@ -6,16 +6,16 @@ import CreateUserDto from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { generateUnixTimestamp } from '../../utils/generateUnixTimestamp';
 import * as bcrypt from 'bcrypt';
-import { FromMail, PasswordBody, PasswordHtml, PasswordSubject } from '../../consts/mailer-message';
-import { MailerService } from '@nestjs-modules/mailer';
+import { PasswordBody, PasswordHtml, PasswordSubject } from '../../consts/mailer-message';
 import { generateRandomPassword } from '../../utils/generatePassword';
 import UpdatePasswordUserDto from './dto/update-password-user.dto';
+import { MailerAwsService } from '../../utils/mailerService';
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name)
               private User: Model<User>,
-              private readonly mailerService: MailerService,
+              private readonly mailerService: MailerAwsService,
   ) {
   }
 
@@ -37,19 +37,10 @@ export class UsersService {
       password,
       createUserDto.gender,
       createUserDto.image,
+      createUserDto.status,
     );
     if (!createUserDto.password) {
-      this.mailerService.sendMail({
-        to: createUserDto.email,
-        from: FromMail,
-        subject: PasswordSubject,
-        html: `${PasswordHtml} <br/><p>${PasswordBody(password)}</p>`,
-      }).then((message) => {
-        console.info(message, 'Password send to client email');
-      }).catch((err) => {
-        console.warn('No se pudo enviar el correo electrónico', err);
-        throw new InternalServerErrorException('No se ha podido enviar el correo electrónico, por favor solicite que se envia nuevamente');
-      });
+      this.mailerService.sendMail(createUserDto.email, PasswordSubject, `${PasswordHtml} <br/><p>${PasswordBody(password)}</p>`);
     }
     const createdUser = new this.User(user);
     return createdUser.save();
