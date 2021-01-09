@@ -4592,13 +4592,13 @@
         "affectsGlobalScope": false
       },
       "../src/modules/newnesses/newness.service.ts": {
-        "version": "1d2a426087f6178d22237a72ebe4624d94594affcb661de70ac0f664030aadea",
-        "signature": "d6f55cb6d42543ed52aceac227577953cf47c2578d5f388dfa095b76b1d0bc2f",
+        "version": "75a04843d2b24bd18ce6e6d02cb79d0a5f095dc603a75b338ab75068daf2458f",
+        "signature": "b74a7a1213fe093277b97ca9d7cab5271443c8862fbc67c2167d7b5a89ee3a3e",
         "affectsGlobalScope": false
       },
       "../src/modules/newnesses/newness.controller.ts": {
-        "version": "bb15fea64271fb76b86e40506fd750a002ab6f9887b29e09f02db207571a2142",
-        "signature": "ef35bdc4869c6b369e38eb3241025e2a8526a7cc6be3dbb140c271c9cb277027",
+        "version": "a9a5c9f15ed0f2237d61a8882f769d25dbbbea36a9edc782905340c784638265",
+        "signature": "c3dace14823d5b910fbd308cfdd85686a9970846c07b7a7934ad75d100506bc7",
         "affectsGlobalScope": false
       },
       "../src/modules/newnesses/newness.module.ts": {
@@ -15402,6 +15402,7 @@
         "../src/utils/mailerService.ts"
       ],
       "../src/modules/newnesses/newness.controller.ts": [
+        "../node_modules/@types/mongoose/index.d.ts",
         "../src/modules/newnesses/dto/create-newness.dto.ts",
         "../src/modules/newnesses/dto/update-newness.dto.ts",
         "../src/modules/newnesses/newness.service.ts",

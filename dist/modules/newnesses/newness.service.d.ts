@@ -6,8 +6,8 @@ export declare class NewnessService {
     private newnessModel;
     constructor(newnessModel: Model<Newness>);
     create(createNewnessDto: CreateNewnessDto): Promise<Newness>;
-    find(id: string): Promise<Newness>;
-    list(conditions: FilterQuery<Newness>): Promise<Newness[]>;
+    find(id: string): import("mongoose").DocumentQuery<Newness, Newness, {}>;
+    list(conditions: FilterQuery<Newness>): import("mongoose").DocumentQuery<Newness[], Newness, {}>;
     update(updateNewnessDto: UpdateNewnessDto): Promise<Newness>;
     delete(id: string): Promise<Newness>;
 }

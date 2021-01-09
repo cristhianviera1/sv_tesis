@@ -32,12 +32,12 @@ let NewnessController = class NewnessController {
     update(updateNewnessDto) {
         return this.newnessService.update(updateNewnessDto);
     }
-    async list(req) {
+    list(req) {
         var _a, _b;
         const startDate = (_a = req === null || req === void 0 ? void 0 : req.query) === null || _a === void 0 ? void 0 : _a.start_date;
         const endDate = (_b = req === null || req === void 0 ? void 0 : req.query) === null || _b === void 0 ? void 0 : _b.end_date;
         if (startDate && endDate) {
-            return await this.newnessService.list({
+            return this.newnessService.list({
                 deleted_at: null,
                 created_at: {
                     $gte: Number(startDate),
@@ -45,7 +45,7 @@ let NewnessController = class NewnessController {
                 },
             });
         }
-        return await this.newnessService.list({ deleted_at: null });
+        return this.newnessService.list({ deleted_at: null });
     }
     find(id) {
         return this.newnessService.find(id);
@@ -91,7 +91,7 @@ __decorate([
     __param(0, common_1.Request()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", void 0)
 ], NewnessController.prototype, "list", null);
 __decorate([
     common_1.UseGuards(jwt_auth_guard_1.JwtAuthGuard, nest_access_control_1.ACGuard),

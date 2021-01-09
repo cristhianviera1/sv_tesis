@@ -31,19 +31,11 @@ let NewnessService = class NewnessService {
         const createdNewness = await this.newnessModel.create(newness);
         return createdNewness.save();
     }
-    async find(id) {
-        const newness = await this.newnessModel.findOne({ _id: id, deleted_at: null });
-        if (!newness) {
-            throw new common_1.NotFoundException('No se encontró la novedad');
-        }
-        return newness;
+    find(id) {
+        return this.newnessModel.findOne({ _id: id, deleted_at: null });
     }
-    async list(conditions) {
-        const newnesses = await this.newnessModel.find(conditions).sort({ created_at: -1 });
-        if ((newnesses === null || newnesses === void 0 ? void 0 : newnesses.length) < 1) {
-            throw new common_1.NotFoundException('No se han encontrado novedades');
-        }
-        return newnesses;
+    list(conditions) {
+        return this.newnessModel.find(conditions).sort({ created_at: -1 });
     }
     async update(updateNewnessDto) {
         const newness = await this.find(updateNewnessDto._id);
