@@ -1,0 +1,67 @@
+/// <reference types="mongoose" />
+import { UsersService } from './users.service';
+import CreateUserDto from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import UpdateImageUserDto from './dto/update-image-user.dto';
+import UpdatePasswordUserDto from './dto/update-password-user.dto';
+export declare class UsersController {
+    private readonly usersService;
+    constructor(usersService: UsersService);
+    list(req: any): Promise<{
+        roles: import("./dto/create-user.dto").UserType;
+        _id: string;
+        dni: string;
+        name: string;
+        surname: string;
+        password: string;
+        email: string;
+        status?: boolean;
+        devices?: string[];
+        gender?: import("./dto/create-user.dto").UserGender;
+        birthday?: number;
+        image?: string;
+        created_at: number;
+        updated_at: number;
+        deleted_at: number;
+        increment(): import("./schemas/user.schema").User;
+        model<T extends import("mongoose").Document>(name: string): import("mongoose").Model<T, {}>;
+        $isDeleted(isDeleted: boolean): void;
+        $isDeleted(): boolean;
+        remove(fn?: (err: any, product: import("./schemas/user.schema").User) => void): Promise<import("./schemas/user.schema").User>;
+        deleteOne(fn?: (err: any, product: import("./schemas/user.schema").User) => void): Promise<import("./schemas/user.schema").User>;
+        save(options?: import("mongoose").SaveOptions, fn?: (err: any, product: import("./schemas/user.schema").User) => void): Promise<import("./schemas/user.schema").User>;
+        save(fn?: (err: any, product: import("./schemas/user.schema").User) => void): Promise<import("./schemas/user.schema").User>;
+        __v?: number;
+        errors: any;
+        isNew: boolean;
+        schema: import("mongoose").Schema<any>;
+        $locals: {
+            [k: string]: any;
+        };
+        id?: any;
+        addListener(event: string | symbol, listener: (...args: any[]) => void): import("./schemas/user.schema").User;
+        on(event: string | symbol, listener: (...args: any[]) => void): import("./schemas/user.schema").User;
+        once(event: string | symbol, listener: (...args: any[]) => void): import("./schemas/user.schema").User;
+        removeListener(event: string | symbol, listener: (...args: any[]) => void): import("./schemas/user.schema").User;
+        off(event: string | symbol, listener: (...args: any[]) => void): import("./schemas/user.schema").User;
+        removeAllListeners(event?: string | symbol): import("./schemas/user.schema").User;
+        setMaxListeners(n: number): import("./schemas/user.schema").User;
+        getMaxListeners(): number;
+        listeners(event: string | symbol): Function[];
+        rawListeners(event: string | symbol): Function[];
+        emit(event: string | symbol, ...args: any[]): boolean;
+        listenerCount(type: string | symbol): number;
+        prependListener(event: string | symbol, listener: (...args: any[]) => void): import("./schemas/user.schema").User;
+        prependOnceListener(event: string | symbol, listener: (...args: any[]) => void): import("./schemas/user.schema").User;
+        eventNames(): (string | symbol)[];
+        collection: import("mongoose").Collection;
+        db: import("mongoose").Connection;
+    }[]>;
+    findOne(id: any): Promise<import("./schemas/user.schema").User>;
+    create(createUserDto: CreateUserDto): Promise<import("./schemas/user.schema").User>;
+    update(updateUserDto: UpdateUserDto): Promise<import("./schemas/user.schema").User>;
+    delete(id: any): Promise<import("./schemas/user.schema").User>;
+    updateStatus(req: any): Promise<import("./schemas/user.schema").User>;
+    updateImage(req: any, updateImageUserDto: UpdateImageUserDto): Promise<import("./schemas/user.schema").User>;
+    updatePassword(req: any, updatePasswordUserDto: UpdatePasswordUserDto): Promise<import("./schemas/user.schema").User>;
+}
