@@ -62,6 +62,10 @@ let ShoppingCartsService = class ShoppingCartsService {
     }
     async uploadVoucherImage(image, shoppingCart) {
         shoppingCart.voucher.image = image;
+        shoppingCart.voucher.statuses.push({
+            created_at: generateUnixTimestamp_1.generateUnixTimestamp(),
+            status: shopping_cart_schema_1.StatusVoucherEnum.WAITING_APROVAL,
+        });
         shoppingCart.markModified('voucher');
         return await shoppingCart.save();
     }
