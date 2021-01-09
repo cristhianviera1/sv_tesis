@@ -75,6 +75,10 @@ export class ShoppingCartsService {
 
   async uploadVoucherImage(image: string, shoppingCart: ShoppingCart) {
     shoppingCart.voucher.image = image;
+    shoppingCart.voucher.statuses.push({
+      created_at: generateUnixTimestamp(),
+      status: StatusVoucherEnum.WAITING_APROVAL,
+    });
     shoppingCart.markModified('voucher');
     return await shoppingCart.save();
   }
