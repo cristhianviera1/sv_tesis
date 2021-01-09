@@ -91,7 +91,7 @@ export class ShoppingCartsController {
     action: 'update',
     possession: 'any',
   })
-  @Put('voucher-status/:id')
+  @Put('status/:id')
   async updateVoucherStatus(
     @Param('id') id: string,
     @Request() req,
@@ -99,6 +99,9 @@ export class ShoppingCartsController {
   ) {
     const shoppingCart = await this.shoppingCartsService.findById(id);
     const user = await this.usersService.findById(req?.user?._id);
+    if (updateVoucherStatusDto.delivery_status) {
+      return await this.shoppingCartsService.updateDeliveryStatus(user, shoppingCart, updateVoucherStatusDto);
+    }
     return await this.shoppingCartsService.updateVoucherStatus(user, shoppingCart, updateVoucherStatusDto);
   }
 }

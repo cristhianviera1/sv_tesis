@@ -111,10 +111,26 @@ export class ShoppingCartsService {
     }
     shoppingCart.voucher.statuses.push({
       status: updateVoucherStatusDto.status,
-      description: `${updateVoucherStatusDto.description}. Actualizado por: ${changedBy.name} ${changedBy.surname}, con email: ${changedBy.email}`,
+      description: `Actualizado por: ${changedBy.name} ${changedBy.surname}, con email: ${changedBy.email}`,
       created_at: generateUnixTimestamp(),
     });
     shoppingCart.markModified('voucher');
+    return await shoppingCart.save();
+  }
+
+  async updateDeliveryStatus(changedBy: User, shoppingCart: ShoppingCart, updateVoucherStatusDto: UpdateVoucherStatusDto) {
+    const canUpdate = shoppingCart.voucher.statuses[shoppingCart.voucher.statuses.length - 1].status == StatusVoucherEnum.APPROVED;
+    if (!canUpdate) {
+      throw new ConflictException(`El estado de la entrega no se puede actualizar si el comprobante de pago no ha sido aprobado, o la orden ya ha sido entregada | anulada `);
+    }
+    shoppingCart.status.push({
+      ...generateStatusOrderModel(
+        updateVoucherStatusDto.delivery_status,
+        generateUnixTimestamp(),
+        `Actualizado por ${changedBy.name} ${changedBy.surname} con email: ${changedBy.email}`,
+      ),
+    });
+    shoppingCart.markModified('status');
     return await shoppingCart.save();
   }
 }

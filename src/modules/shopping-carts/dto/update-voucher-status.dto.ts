@@ -1,6 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { StatusVoucherType } from '../schema/shopping-cart.schema';
+import { StatusTypeOrder, StatusVoucherType } from '../schema/shopping-cart.schema';
 
 export default class UpdateVoucherStatusDto {
   @ApiProperty()
@@ -8,5 +8,5 @@ export default class UpdateVoucherStatusDto {
   status: StatusVoucherType;
 
   @ApiProperty()
-  description?: string;
+  delivery_status: StatusTypeOrder;
 }
