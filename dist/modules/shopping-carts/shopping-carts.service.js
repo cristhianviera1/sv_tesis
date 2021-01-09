@@ -82,7 +82,7 @@ let ShoppingCartsService = class ShoppingCartsService {
         return await order.save();
     }
     async updateVoucherStatus(changedBy, shoppingCart, updateVoucherStatusDto) {
-        const canUpdate = !shoppingCart.voucher.statuses.some((status) => status.status === shopping_cart_schema_1.StatusVoucherEnum.DENIED || status.status === shopping_cart_schema_1.StatusVoucherEnum.APPROVED);
+        const canUpdate = shoppingCart.voucher.statuses.some((status) => status.status === shopping_cart_schema_1.StatusVoucherEnum.DENIED || status.status === shopping_cart_schema_1.StatusVoucherEnum.APPROVED);
         if (canUpdate) {
             throw new common_1.ConflictException(`El comprobante de pago ya ha sido ${updateVoucherStatusDto.status}`);
         }
