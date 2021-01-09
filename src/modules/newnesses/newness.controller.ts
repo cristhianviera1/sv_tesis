@@ -39,11 +39,11 @@ export class NewnessController {
     possession: 'any',
   })
   @Get()
-  async list(@Request() req) {
+  list(@Request() req) {
     const startDate = req?.query?.start_date;
     const endDate = req?.query?.end_date;
     if (startDate && endDate) {
-      return await this.newnessService.list({
+      return this.newnessService.list({
         deleted_at: null,
         created_at: {
           $gte: Number(startDate),
@@ -51,7 +51,7 @@ export class NewnessController {
         },
       });
     }
-    return await this.newnessService.list({ deleted_at: null });
+    return this.newnessService.list({ deleted_at: null });
   }
 
   @UseGuards(JwtAuthGuard, ACGuard)
