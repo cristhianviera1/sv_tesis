@@ -103,7 +103,7 @@ export class ShoppingCartsService {
   }
 
   async updateVoucherStatus(changedBy: User, shoppingCart: ShoppingCart, updateVoucherStatusDto: UpdateVoucherStatusDto) {
-    const canUpdate = !shoppingCart.voucher.statuses.some((status) =>
+    const canUpdate = shoppingCart.voucher.statuses.some((status) =>
       status.status === StatusVoucherEnum.DENIED || status.status === StatusVoucherEnum.APPROVED,
     );
     if (canUpdate) {
