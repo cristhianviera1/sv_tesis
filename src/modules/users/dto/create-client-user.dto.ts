@@ -47,7 +47,9 @@ export class CreateClientUserDto extends CreateUserDto {
     super(name, surname, email, birthday, roles, password);
     this.name = name;
     this.surname = surname;
-    this.password = bcrypt.hashSync(password, 10);
+    if (password) {
+      this.password = bcrypt.hashSync(password, 10);
+    }
     this.email = email;
     this.status = status;
     this.roles = roles;

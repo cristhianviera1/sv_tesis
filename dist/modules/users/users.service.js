@@ -30,29 +30,40 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const user_schema_1 = require("./schemas/user.schema");
-const create_user_dto_1 = __importDefault(require("./dto/create-user.dto"));
+const create_user_dto_1 = __importStar(require("./dto/create-user.dto"));
 const generateUnixTimestamp_1 = require("../../utils/generateUnixTimestamp");
 const bcrypt = __importStar(require("bcrypt"));
 const mailer_message_1 = require("../../consts/mailer-message");
 const generatePassword_1 = require("../../utils/generatePassword");
 const mailerService_1 = require("../../utils/mailerService");
+const create_client_user_dto_1 = require("./dto/create-client-user.dto");
 let UsersService = class UsersService {
     constructor(User, mailerService) {
         this.User = User;
         this.mailerService = mailerService;
     }
+
     async list(condition, start = 0, items = 20) {
         return this.User.find(condition).skip(start).limit(items);
     }
+
+    async createClient(createClientUserDto) {
+        if (await this.existingEmail(createClientUserDto === null || createClientUserDto === void 0 ? void 0 : createClientUserDto.email)) {
+            throw new common_1.ConflictException('Ya existe un usuario con ese correo electrónico.');
+        }
+        const generatedPassword = generatePassword_1.generateRandomPassword();
+        const client = new create_client_user_dto_1.CreateClientUserDto(createClientUserDto.name, createClientUserDto.surname, createClientUserDto.email, create_user_dto_1.UserTypeEnum.CLIENT, generatedPassword, true, createClientUserDto.birthday, createClientUserDto.gender);
+        const createdUser = new this.User(client);
+        this.mailerService.sendMail(createClientUserDto.email, mailer_message_1.PasswordSubject, `${mailer_message_1.PasswordHtml} <br/><p>${mailer_message_1.PasswordBody(generatedPassword)}</p>`);
+        return createdUser.save();
+    }
+
     async create(createUserDto) {
         if (await this.existingEmail(createUserDto === null || createUserDto === void 0 ? void 0 : createUserDto.email)) {
             throw new common_1.ConflictException('Ya existe un usuario con ese correo electrónico.');

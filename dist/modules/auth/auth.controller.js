@@ -16,7 +16,6 @@ exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const users_service_1 = require("../users/users.service");
 const jwt_1 = require("@nestjs/jwt");
-const create_user_dto_1 = require("../users/dto/create-user.dto");
 const swagger_1 = require("@nestjs/swagger");
 const auth_service_1 = require("./auth.service");
 const sign_in_dto_1 = require("./dto/sign-in.dto");
@@ -52,11 +51,7 @@ let AuthController = class AuthController {
         };
     }
     async signUp(createClientUserDto) {
-        const generatedPassword = generatePassword_1.generateRandomPassword();
-        const client = new create_client_user_dto_1.CreateClientUserDto(createClientUserDto.name, createClientUserDto.surname, createClientUserDto.email, create_user_dto_1.UserTypeEnum.CLIENT, generatedPassword, true, createClientUserDto.birthday, createClientUserDto.gender);
-        const createdUser = await this.userService.create(client);
-        this.mailerService.sendMail(createClientUserDto.email, mailer_message_1.PasswordSubject, `${mailer_message_1.PasswordHtml} <br/><p>${mailer_message_1.PasswordBody(generatedPassword)}</p>`);
-        return await createdUser.save();
+        return await this.userService.createClient(createClientUserDto);
     }
     async recoverPass(email) {
         const generatedPassword = generatePassword_1.generateRandomPassword();

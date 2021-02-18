@@ -4326,9 +4326,14 @@
         "signature": "5de99abeead63f096efd989421f6db9dd9bf694798a571974d93de1bfac4f7ee",
         "affectsGlobalScope": false
       },
+      "../src/modules/users/dto/create-client-user.dto.ts": {
+        "version": "40369357422b984714ac53ec475c80872b89e2221fdc24418afe15ae0589d982",
+        "signature": "e80da5a8dad1808bdc8e8aa2d9d96f96f2cf31e2a9485c6084fe1e5f1d35092d",
+        "affectsGlobalScope": false
+      },
       "../src/modules/users/users.service.ts": {
-        "version": "92e21db71864d22a71fa75d632768f050b8b71142df939d542c1cca1e37a9569",
-        "signature": "34c92a3c38eff58bf85a79a6c94c8b041c18ff769a6f0eabb22ac52839963f6c",
+        "version": "504a8b47974495eab798df9e565af6cc62aca0034e6eac13777aa7b46dfd26c8",
+        "signature": "63eb0e618cec840cf61e2d27ec8525afcd5f2a21bb7a08e84d0402b1b10b3cb3",
         "affectsGlobalScope": false
       },
       "../src/guards/jwt-auth.guard.ts": {
@@ -4491,13 +4496,8 @@
         "signature": "dca6127f65d9349a884ba423e8aae1d00879eeac39eccf8264928573e5a84c58",
         "affectsGlobalScope": false
       },
-      "../src/modules/users/dto/create-client-user.dto.ts": {
-        "version": "c20cd54d6cc4c660157129ce643bcde6db1cc4ec2e359d4d7386149be6d76729",
-        "signature": "e80da5a8dad1808bdc8e8aa2d9d96f96f2cf31e2a9485c6084fe1e5f1d35092d",
-        "affectsGlobalScope": false
-      },
       "../src/modules/auth/auth.controller.ts": {
-        "version": "caaeebb83f6bdfe25ad9f27afc87037142409846593748a4c30631f6d2295613",
+        "version": "8610a23a4d6786198aae5c0fc5a076f591ae2c6e13d87b6c7e918daae17bfc47",
         "signature": "4cb8188b3c073160e662b7af2446fde2876b057b4a6de585829f4dcb99b207fb",
         "affectsGlobalScope": false
       },
@@ -10126,7 +10126,6 @@
         "../src/modules/auth/auth.service.ts",
         "../src/modules/auth/dto/sign-in.dto.ts",
         "../src/modules/users/dto/create-client-user.dto.ts",
-        "../src/modules/users/dto/create-user.dto.ts",
         "../src/modules/users/users.service.ts",
         "../src/utils/generatePassword.ts",
         "../src/utils/mailerService.ts"
@@ -10542,6 +10541,7 @@
         "../node_modules/@nestjs/mongoose/index.d.ts",
         "../node_modules/@types/mongoose/index.d.ts",
         "../src/consts/mailer-message.ts",
+        "../src/modules/users/dto/create-client-user.dto.ts",
         "../src/modules/users/dto/create-user.dto.ts",
         "../src/modules/users/dto/update-password-user.dto.ts",
         "../src/modules/users/dto/update-user.dto.ts",
@@ -15500,6 +15500,7 @@
       ],
       "../src/modules/users/users.service.ts": [
         "../node_modules/@types/mongoose/index.d.ts",
+        "../src/modules/users/dto/create-client-user.dto.ts",
         "../src/modules/users/dto/create-user.dto.ts",
         "../src/modules/users/dto/update-password-user.dto.ts",
         "../src/modules/users/dto/update-user.dto.ts",
