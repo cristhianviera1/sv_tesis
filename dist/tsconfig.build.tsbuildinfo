@@ -4492,7 +4492,7 @@
         "affectsGlobalScope": false
       },
       "../src/modules/users/dto/create-client-user.dto.ts": {
-        "version": "f5e5a2e5cbb09c141d224db744ac2fa81e507fa25edf822524e0ea0efdb30531",
+        "version": "c20cd54d6cc4c660157129ce643bcde6db1cc4ec2e359d4d7386149be6d76729",
         "signature": "e80da5a8dad1808bdc8e8aa2d9d96f96f2cf31e2a9485c6084fe1e5f1d35092d",
         "affectsGlobalScope": false
       },

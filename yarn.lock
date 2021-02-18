@@ -7617,11 +7617,6 @@ nest-access-control@^2.0.2:
   dependencies:
     accesscontrol "^2.2.1"
 
-nest-aws-sdk@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/nest-aws-sdk/-/nest-aws-sdk-1.0.0.tgz#bad455b1820e1b3712eb2c1904615a74190471f0"
-  integrity sha512-+bLZfwI/XNONRHd1Nquyd841SSZmWfvizF5/oBZIbDSsYZRotN/kif84ZrrsPT3soix8fUDOpbfByr4rH2/nIw==
-
 nested-error-stacks@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/nested-error-stacks/-/nested-error-stacks-2.1.0.tgz#0fbdcf3e13fe4994781280524f8b96b0cdff9c61"
