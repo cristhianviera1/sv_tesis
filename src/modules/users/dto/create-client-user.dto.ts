@@ -1,15 +1,15 @@
-import {IsEmail, IsNotEmpty} from 'class-validator';
-import CreateUserDto, {UserGender, UserType} from './create-user.dto';
-import {ApiProperty} from '@nestjs/swagger';
+import { IsEmail, IsNotEmpty } from 'class-validator';
+import CreateUserDto, { UserGender, UserType } from './create-user.dto';
+import { ApiProperty } from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
 
 export class CreateClientUserDto extends CreateUserDto {
   @ApiProperty()
-  @IsNotEmpty({message: 'El nombre es requerido'})
+  @IsNotEmpty({ message: 'El nombre es requerido' })
   name: string;
 
   @ApiProperty()
-  @IsNotEmpty({message: 'El apellido es requerido'})
+  @IsNotEmpty({ message: 'El apellido es requerido' })
   surname: string;
 
   @ApiProperty()
