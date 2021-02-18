@@ -1,15 +1,16 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model } from 'mongoose';
-import { User } from './schemas/user.schema';
-import CreateUserDto from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { generateUnixTimestamp } from '../../utils/generateUnixTimestamp';
+import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
+import {InjectModel} from '@nestjs/mongoose';
+import {FilterQuery, Model} from 'mongoose';
+import {User} from './schemas/user.schema';
+import CreateUserDto, {UserTypeEnum} from './dto/create-user.dto';
+import {UpdateUserDto} from './dto/update-user.dto';
+import {generateUnixTimestamp} from '../../utils/generateUnixTimestamp';
 import * as bcrypt from 'bcrypt';
-import { PasswordBody, PasswordHtml, PasswordSubject } from '../../consts/mailer-message';
-import { generateRandomPassword } from '../../utils/generatePassword';
+import {PasswordBody, PasswordHtml, PasswordSubject} from '../../consts/mailer-message';
+import {generateRandomPassword} from '../../utils/generatePassword';
 import UpdatePasswordUserDto from './dto/update-password-user.dto';
-import { MailerAwsService } from '../../utils/mailerService';
+import {MailerAwsService} from '../../utils/mailerService';
+import {CreateClientUserDto} from "./dto/create-client-user.dto";
 
 @Injectable()
 export class UsersService {
@@ -23,15 +24,39 @@ export class UsersService {
     return this.User.find(condition).skip(start).limit(items);
   }
 
+  async createClient(createClientUserDto: CreateClientUserDto) {
+    if (await this.existingEmail(createClientUserDto?.email)) {
+      throw new ConflictException('Ya existe un usuario con ese correo electrónico.');
+    }
+    const generatedPassword = generateRandomPassword();
+    const client = new CreateClientUserDto(
+        createClientUserDto.name,
+        createClientUserDto.surname,
+        createClientUserDto.email,
+        UserTypeEnum.CLIENT,
+        generatedPassword,
+        true,
+        createClientUserDto.birthday,
+        createClientUserDto.gender,
+    );
+    const createdUser = new this.User(client);
+    this.mailerService.sendMail(
+        createClientUserDto.email,
+        PasswordSubject,
+        `${PasswordHtml} <br/><p>${PasswordBody(generatedPassword)}</p>`,
+    );
+    return createdUser.save();
+  }
+
   async create(createUserDto: CreateUserDto): Promise<User> {
     if (await this.existingEmail(createUserDto?.email)) {
       throw new ConflictException('Ya existe un usuario con ese correo electrónico.');
     }
     const password = createUserDto.password || generateRandomPassword();
     const user = new CreateUserDto(
-      createUserDto.name,
-      createUserDto.surname,
-      createUserDto.email,
+        createUserDto.name,
+        createUserDto.surname,
+        createUserDto.email,
       createUserDto.birthday,
       createUserDto.roles,
       password,

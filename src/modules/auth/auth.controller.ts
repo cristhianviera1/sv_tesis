@@ -9,31 +9,24 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
-import { JwtService } from '@nestjs/jwt';
-import { UserTypeEnum } from '../users/dto/create-user.dto';
-import { ApiProperty } from '@nestjs/swagger';
-import { AuthService } from './auth.service';
-import { SignInDto } from './dto/sign-in.dto';
-import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
-import { CreateClientUserDto } from '../users/dto/create-client-user.dto';
-import {
-  PasswordBody,
-  PasswordHtml,
-  PasswordRecoverSubject,
-  PasswordSubject,
-  PassworReceiverdHtml,
-} from 'src/consts/mailer-message';
-import { generateRandomPassword } from '../../utils/generatePassword';
-import { MailerAwsService } from '../../utils/mailerService';
+import {UsersService} from '../users/users.service';
+import {JwtService} from '@nestjs/jwt';
+import {ApiProperty} from '@nestjs/swagger';
+import {AuthService} from './auth.service';
+import {SignInDto} from './dto/sign-in.dto';
+import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
+import {CreateClientUserDto} from '../users/dto/create-client-user.dto';
+import {PasswordBody, PasswordRecoverSubject, PassworReceiverdHtml,} from 'src/consts/mailer-message';
+import {generateRandomPassword} from '../../utils/generatePassword';
+import {MailerAwsService} from '../../utils/mailerService';
 
 @Controller('auth')
 export class AuthController {
   constructor(
-    private userService: UsersService,
-    private authService: AuthService,
-    private jwtService: JwtService,
-    private readonly mailerService: MailerAwsService,
+      private userService: UsersService,
+      private authService: AuthService,
+      private jwtService: JwtService,
+      private readonly mailerService: MailerAwsService,
   ) {
   }
 
@@ -66,25 +59,7 @@ export class AuthController {
   @ApiProperty({ description: 'Registro solo para usuarios' })
   @Post('register')
   async signUp(@Body(ValidationPipe) createClientUserDto: CreateClientUserDto) {
-    const generatedPassword = generateRandomPassword();
-
-    const client = new CreateClientUserDto(
-      createClientUserDto.name,
-      createClientUserDto.surname,
-      createClientUserDto.email,
-      UserTypeEnum.CLIENT,
-      generatedPassword,
-      true,
-      createClientUserDto.birthday,
-      createClientUserDto.gender,
-    );
-    const createdUser = await this.userService.create(client);
-    this.mailerService.sendMail(
-      createClientUserDto.email,
-      PasswordSubject,
-      `${PasswordHtml} <br/><p>${PasswordBody(generatedPassword)}</p>`,
-    );
-    return await createdUser.save();
+    return await this.userService.createClient(createClientUserDto);
   }
 
   @ApiProperty()
