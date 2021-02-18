@@ -1,9 +1,9 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
 import CreateUserDto, { UserGender, UserType } from './create-user.dto';
 import { ApiProperty } from '@nestjs/swagger';
+import * as bcrypt from 'bcrypt';
 
 export class CreateClientUserDto extends CreateUserDto {
-
   @ApiProperty()
   @IsNotEmpty({ message: 'El nombre es requerido' })
   name: string;
@@ -34,11 +34,22 @@ export class CreateClientUserDto extends CreateUserDto {
   @IsNotEmpty({ message: 'La fecha de nacimiento es obligatoria' })
   birthday: number;
 
-  constructor(name: string, surname: string, email: string, roles: UserType, password: string, status: boolean, birthday: number, gender: UserGender) {
+  constructor(
+    name: string,
+    surname: string,
+    email: string,
+    roles: UserType,
+    password: string,
+    status: boolean,
+    birthday: number,
+    gender: UserGender,
+  ) {
     super(name, surname, email, birthday, roles, password);
     this.name = name;
     this.surname = surname;
-    this.password = password;
+    if (password) {
+      this.password = bcrypt.hashSync(password, 10);
+    }
     this.email = email;
     this.status = status;
     this.roles = roles;
