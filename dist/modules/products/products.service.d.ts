@@ -11,6 +11,6 @@ export declare class ProductsService {
     create(createProductDto: CreateProductDto): Promise<Product>;
     update(updateProductDto: UpdateProductDto): Promise<Product>;
     delete(id: string): Promise<boolean>;
-    changeStock(id: string, quantity: number, add: boolean): Promise<boolean>;
+    changeStock(id: string, quantity: number, add: boolean): Promise<Product>;
     getSafeParameters(product: Product): Product;
 }

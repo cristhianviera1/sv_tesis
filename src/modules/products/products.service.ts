@@ -63,9 +63,8 @@ export class ProductsService {
     async changeStock(id: string, quantity: number, add: boolean) {
         const product = await this.findById(id);
         add ? product.stock += quantity : product.stock -= quantity;
-        await product.save();
         product.markModified('stock');
-        return true;
+        return await product.save();
     }
 
     getSafeParameters(product: Product): Product {

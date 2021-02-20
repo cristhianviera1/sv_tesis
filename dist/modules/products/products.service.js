@@ -62,9 +62,8 @@ let ProductsService = class ProductsService {
     async changeStock(id, quantity, add) {
         const product = await this.findById(id);
         add ? product.stock += quantity : product.stock -= quantity;
-        await product.save();
         product.markModified('stock');
-        return true;
+        return await product.save();
     }
     getSafeParameters(product) {
         return Object.assign(Object.assign({}, product.toObject()), { stock: undefined, status: undefined, created_at: undefined, updated_at: undefined, deleted_at: undefined });
