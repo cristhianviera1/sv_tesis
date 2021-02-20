@@ -103,16 +103,6 @@ export class ShoppingCartsService {
             `La transacción fue actualizada por: ${changedBy.name} ${changedBy.surname}. con email: ${changedBy.email}`,
         ),
     );
-    if (order.voucher.statuses[order.voucher.statuses.length - 1].status === 'aprobado') {
-      for (let i = 0; i < order.products.length; i++) {
-        await this.productsService.changeStock(order.products[i].product._id, order.products[i].quantity, false);
-      }
-    }
-    if (order.status[order.status.length - 1].status === 'anulado') {
-      for (let i = 0; i < order.products.length; i++) {
-        await this.productsService.changeStock(order.products[i].product._id, order.products[i].quantity, true);
-      }
-    }
     if (updateShoppingCartStatus.status === StatusTypeOrderEnum.CANCELED) {
       order.deleted_at = generateUnixTimestamp();
     }
@@ -122,7 +112,7 @@ export class ShoppingCartsService {
 
   async updateVoucherStatus(changedBy: User, shoppingCart: ShoppingCart, updateVoucherStatusDto: UpdateVoucherStatusDto) {
     const canUpdate = shoppingCart.voucher.statuses.some((status) =>
-      status.status === StatusVoucherEnum.DENIED || status.status === StatusVoucherEnum.APPROVED,
+        status.status === StatusVoucherEnum.DENIED || status.status === StatusVoucherEnum.APPROVED,
     );
     if (canUpdate) {
       throw new ConflictException(`El comprobante de pago ya ha sido ${updateVoucherStatusDto.status}`);
@@ -132,6 +122,11 @@ export class ShoppingCartsService {
       description: `Actualizado por: ${changedBy.name} ${changedBy.surname}, con email: ${changedBy.email}`,
       created_at: generateUnixTimestamp(),
     });
+    if (updateVoucherStatusDto.status === 'aprobado') {
+      for (let i = 0; i < shoppingCart.products.length; i++) {
+        await this.productsService.changeStock(shoppingCart.products[i].product._id, shoppingCart.products[i].quantity, false);
+      }
+    }
     shoppingCart.markModified('voucher');
     return await shoppingCart.save();
   }
@@ -143,11 +138,16 @@ export class ShoppingCartsService {
     }
     shoppingCart.status.push({
       ...generateStatusOrderModel(
-        updateVoucherStatusDto.delivery_status,
-        generateUnixTimestamp(),
-        `Actualizado por ${changedBy.name} ${changedBy.surname} con email: ${changedBy.email}`,
+          updateVoucherStatusDto.delivery_status,
+          generateUnixTimestamp(),
+          `Actualizado por ${changedBy.name} ${changedBy.surname} con email: ${changedBy.email}`,
       ),
     });
+    if (updateVoucherStatusDto.delivery_status === StatusTypeOrderEnum.CANCELED) {
+      for (let i = 0; i < shoppingCart.products.length; i++) {
+        await this.productsService.changeStock(shoppingCart.products[i].product._id, shoppingCart.products[i].quantity, true);
+      }
+    }
     shoppingCart.markModified('status');
     return await shoppingCart.save();
   }

@@ -4847,7 +4847,7 @@
         "affectsGlobalScope": false
       },
       "../src/modules/shopping-carts/shopping-carts.service.ts": {
-        "version": "ad2f577d983ad44c8822d1b4625c8a1d857700d6aa50b64f17b0a17905c02c23",
+        "version": "946c691147be0fc8800db60ae984ee08d14a91c51a41a18822eeb7c967decd91",
         "signature": "03648db5dd9930a2d38e5bf95c83b584a04618b0b2e9677ed1d06323a9d5fb04",
         "affectsGlobalScope": false
       },

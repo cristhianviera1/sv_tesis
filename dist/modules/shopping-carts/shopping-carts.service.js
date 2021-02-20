@@ -82,16 +82,6 @@ let ShoppingCartsService = class ShoppingCartsService {
             throw new common_1.ConflictException('No se puede actualizar el estado de entrega hasta que el comprobante del depósito haya sido verificado');
         }
         order.status.push(shopping_cart_schema_1.generateStatusOrderModel(updateShoppingCartStatus.status, generateUnixTimestamp_1.generateUnixTimestamp(), `La transacción fue actualizada por: ${changedBy.name} ${changedBy.surname}. con email: ${changedBy.email}`));
-        if (order.voucher.statuses[order.voucher.statuses.length - 1].status === 'aprobado') {
-            for (let i = 0; i < order.products.length; i++) {
-                await this.productsService.changeStock(order.products[i].product._id, order.products[i].quantity, false);
-            }
-        }
-        if (order.status[order.status.length - 1].status === 'anulado') {
-            for (let i = 0; i < order.products.length; i++) {
-                await this.productsService.changeStock(order.products[i].product._id, order.products[i].quantity, true);
-            }
-        }
         if (updateShoppingCartStatus.status === shopping_cart_schema_1.StatusTypeOrderEnum.CANCELED) {
             order.deleted_at = generateUnixTimestamp_1.generateUnixTimestamp();
         }
@@ -108,6 +98,11 @@ let ShoppingCartsService = class ShoppingCartsService {
             description: `Actualizado por: ${changedBy.name} ${changedBy.surname}, con email: ${changedBy.email}`,
             created_at: generateUnixTimestamp_1.generateUnixTimestamp(),
         });
+        if (updateVoucherStatusDto.status === 'aprobado') {
+            for (let i = 0; i < shoppingCart.products.length; i++) {
+                await this.productsService.changeStock(shoppingCart.products[i].product._id, shoppingCart.products[i].quantity, false);
+            }
+        }
         shoppingCart.markModified('voucher');
         return await shoppingCart.save();
     }
@@ -117,6 +112,11 @@ let ShoppingCartsService = class ShoppingCartsService {
             throw new common_1.ConflictException(`El estado de la entrega no se puede actualizar si el comprobante de pago no ha sido aprobado, o la orden ya ha sido entregada | anulada `);
         }
         shoppingCart.status.push(Object.assign({}, shopping_cart_schema_1.generateStatusOrderModel(updateVoucherStatusDto.delivery_status, generateUnixTimestamp_1.generateUnixTimestamp(), `Actualizado por ${changedBy.name} ${changedBy.surname} con email: ${changedBy.email}`)));
+        if (updateVoucherStatusDto.delivery_status === shopping_cart_schema_1.StatusTypeOrderEnum.CANCELED) {
+            for (let i = 0; i < shoppingCart.products.length; i++) {
+                await this.productsService.changeStock(shoppingCart.products[i].product._id, shoppingCart.products[i].quantity, true);
+            }
+        }
         shoppingCart.markModified('status');
         return await shoppingCart.save();
     }
