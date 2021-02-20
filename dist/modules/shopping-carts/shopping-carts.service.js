@@ -46,11 +46,11 @@ let ShoppingCartsService = class ShoppingCartsService {
         for (let i = 0; i < createShoppingCartDto.products.length; i++) {
             const productDetail = createShoppingCartDto.products[i];
             const productEntity = await this.productsService.findById(productDetail.productID);
-            if (productEntity.stock > productDetail.quantity) {
+            if (productEntity.stock < productDetail.quantity) {
                 throw new common_1.ConflictException(`Lo sentimos no poseemos el suficiente stock de ${productEntity.name}`);
             }
             productsDetail.push({
-                product: Object.assign(Object.assign({}, this.productsService.getSafeParameters(productEntity)), {image: undefined}),
+                product: Object.assign(Object.assign({}, this.productsService.getSafeParameters(productEntity)), { image: undefined }),
                 quantity: productDetail.quantity,
             });
             total += (productEntity.price * productDetail.quantity);
@@ -75,7 +75,7 @@ let ShoppingCartsService = class ShoppingCartsService {
     async updateStatus(changedBy, cart_id, updateShoppingCartStatus) {
         const order = await this.findOne({
             _id: cart_id,
-            'status.status': {$nin: [shopping_cart_schema_1.StatusTypeOrderEnum.DELIVERED, shopping_cart_schema_1.StatusTypeOrderEnum.CANCELED]},
+            'status.status': { $nin: [shopping_cart_schema_1.StatusTypeOrderEnum.DELIVERED, shopping_cart_schema_1.StatusTypeOrderEnum.CANCELED] },
             deleted_at: null,
         });
         if (!order.voucher.statuses.some((status) => status.status === shopping_cart_schema_1.StatusVoucherEnum.APPROVED)) {
