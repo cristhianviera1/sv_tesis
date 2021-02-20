@@ -50,7 +50,7 @@ export class ShoppingCartsService {
     for (let i = 0; i < createShoppingCartDto.products.length; i++) {
       const productDetail = createShoppingCartDto.products[i];
       const productEntity = await this.productsService.findById(productDetail.productID);
-      if (productEntity.stock > productDetail.quantity) {
+      if (productEntity.stock < productDetail.quantity) {
         throw new ConflictException(`Lo sentimos no poseemos el suficiente stock de ${productEntity.name}`);
       }
       productsDetail.push({
