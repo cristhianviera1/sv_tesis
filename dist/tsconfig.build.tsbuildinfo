@@ -4622,7 +4622,7 @@
         "affectsGlobalScope": false
       },
       "../src/modules/products/products.service.ts": {
-        "version": "7ea70b1f15e5b344e58df9ca9afda87e191c33e4006cbb117d3363ceb0d9fbf9",
+        "version": "3153de77d0f5782f9b4df4140cab57422a29cc4f712f1bfe7a2d98ad2b8aca25",
         "signature": "ebd77f13a3865677d66ec2b3004454498b8676d45a85f6c4796bbc01827494d0",
         "affectsGlobalScope": false
       },
@@ -4847,7 +4847,7 @@
         "affectsGlobalScope": false
       },
       "../src/modules/shopping-carts/shopping-carts.service.ts": {
-        "version": "c3e9917fdacdb1c397860d0293b234361f2cc907153fa2b1415f745ed0652948",
+        "version": "ad2f577d983ad44c8822d1b4625c8a1d857700d6aa50b64f17b0a17905c02c23",
         "signature": "03648db5dd9930a2d38e5bf95c83b584a04618b0b2e9677ed1d06323a9d5fb04",
         "affectsGlobalScope": false
       },

@@ -64,6 +64,7 @@ export class ProductsService {
         const product = await this.findById(id);
         add ? product.stock += quantity : product.stock -= quantity;
         await product.save();
+        product.markModified('stock');
         return true;
     }
 
