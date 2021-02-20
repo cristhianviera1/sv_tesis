@@ -104,9 +104,14 @@ export class ShoppingCartsService {
         ),
     );
     if (order.voucher.statuses[order.voucher.statuses.length - 1].status === 'aprobado') {
-      order.products.map((product) => {
-        this.productsService.removeOfStock(product.product._id, product.quantity);
-      })
+      for (let i = 0; i < order.products.length; i++) {
+        await this.productsService.changeStock(order.products[i].product._id, order.products[i].quantity, false);
+      }
+    }
+    if (order.status[order.status.length - 1].status === 'anulado') {
+      for (let i = 0; i < order.products.length; i++) {
+        await this.productsService.changeStock(order.products[i].product._id, order.products[i].quantity, true);
+      }
     }
     if (updateShoppingCartStatus.status === StatusTypeOrderEnum.CANCELED) {
       order.deleted_at = generateUnixTimestamp();

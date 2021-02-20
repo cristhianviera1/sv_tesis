@@ -83,9 +83,14 @@ let ShoppingCartsService = class ShoppingCartsService {
         }
         order.status.push(shopping_cart_schema_1.generateStatusOrderModel(updateShoppingCartStatus.status, generateUnixTimestamp_1.generateUnixTimestamp(), `La transacción fue actualizada por: ${changedBy.name} ${changedBy.surname}. con email: ${changedBy.email}`));
         if (order.voucher.statuses[order.voucher.statuses.length - 1].status === 'aprobado') {
-            order.products.map((product) => {
-                this.productsService.removeOfStock(product.product._id, product.quantity);
-            });
+            for (let i = 0; i < order.products.length; i++) {
+                await this.productsService.changeStock(order.products[i].product._id, order.products[i].quantity, false);
+            }
+        }
+        if (order.status[order.status.length - 1].status === 'anulado') {
+            for (let i = 0; i < order.products.length; i++) {
+                await this.productsService.changeStock(order.products[i].product._id, order.products[i].quantity, true);
+            }
         }
         if (updateShoppingCartStatus.status === shopping_cart_schema_1.StatusTypeOrderEnum.CANCELED) {
             order.deleted_at = generateUnixTimestamp_1.generateUnixTimestamp();

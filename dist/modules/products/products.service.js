@@ -59,9 +59,9 @@ let ProductsService = class ProductsService {
         await product.save();
         return true;
     }
-    async removeOfStock(id, quantity) {
+    async changeStock(id, quantity, add) {
         const product = await this.findById(id);
-        product.stock -= quantity;
+        add ? product.stock += quantity : product.stock -= quantity;
         await product.save();
         return true;
     }

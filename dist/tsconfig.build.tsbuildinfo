@@ -4622,8 +4622,8 @@
         "affectsGlobalScope": false
       },
       "../src/modules/products/products.service.ts": {
-        "version": "6828d7dbd54858dea9572de5da69a66c52a9140bbc6039dd46e4fa67752a7bbd",
-        "signature": "765215de9139fc4257e194b2daebd1d0e84613def77b40aed25e78f848ed8b5a",
+        "version": "7ea70b1f15e5b344e58df9ca9afda87e191c33e4006cbb117d3363ceb0d9fbf9",
+        "signature": "ebd77f13a3865677d66ec2b3004454498b8676d45a85f6c4796bbc01827494d0",
         "affectsGlobalScope": false
       },
       "../src/modules/products/products.controller.ts": {
@@ -4847,7 +4847,7 @@
         "affectsGlobalScope": false
       },
       "../src/modules/shopping-carts/shopping-carts.service.ts": {
-        "version": "60655abc2a0e7ebfc65cacefd9024680f3c76469afd57b1ad3aa01e7ba709a8f",
+        "version": "c3e9917fdacdb1c397860d0293b234361f2cc907153fa2b1415f745ed0652948",
         "signature": "03648db5dd9930a2d38e5bf95c83b584a04618b0b2e9677ed1d06323a9d5fb04",
         "affectsGlobalScope": false
       },

@@ -8,73 +8,73 @@ import {Product} from './schema/product.schema';
 
 @Injectable()
 export class ProductsService {
-  constructor(
-      @InjectModel(Product.name) private ProductModel: Model<Product>,
-  ) {
-  }
-
-  async findById(id: string) {
-    const product = await this.findOne({ _id: id });
-    if (!product) {
-      throw new NotFoundException('No se ha encontrado el producto con el id proporcionado');
+    constructor(
+        @InjectModel(Product.name) private ProductModel: Model<Product>,
+    ) {
     }
-    return product;
-  }
 
-  async findOne(conditions: FilterQuery<Product>) {
-    return this.ProductModel.findOne(conditions);
-  }
+    async findById(id: string) {
+        const product = await this.findOne({_id: id});
+        if (!product) {
+            throw new NotFoundException('No se ha encontrado el producto con el id proporcionado');
+        }
+        return product;
+    }
 
-  async list(conditions: FilterQuery<Product>) {
-    return this.ProductModel.find(conditions);
-  }
+    async findOne(conditions: FilterQuery<Product>) {
+        return this.ProductModel.findOne(conditions);
+    }
 
-  async create(createProductDto: CreateProductDto) {
-    const newProduct = new CreateProductDto(
-      createProductDto.name,
-      createProductDto.stock,
-      createProductDto.price,
-      createProductDto.detail,
-      createProductDto.image,
-        createProductDto.status
-    );
-    return await this.ProductModel.create(newProduct);
-  }
+    async list(conditions: FilterQuery<Product>) {
+        return this.ProductModel.find(conditions);
+    }
 
-  async update(updateProductDto: UpdateProductDto) {
-    const product = await this.findById(updateProductDto._id);
-    product.name = updateProductDto.name;
-    product.stock = updateProductDto.stock;
-    product.price = updateProductDto.price;
-    product.detail = updateProductDto.detail;
-    product.image = updateProductDto.image;
-    product.status = updateProductDto.status;
+    async create(createProductDto: CreateProductDto) {
+        const newProduct = new CreateProductDto(
+            createProductDto.name,
+            createProductDto.stock,
+            createProductDto.price,
+            createProductDto.detail,
+            createProductDto.image,
+            createProductDto.status
+        );
+        return await this.ProductModel.create(newProduct);
+    }
 
-    return await product.save();
-  }
+    async update(updateProductDto: UpdateProductDto) {
+        const product = await this.findById(updateProductDto._id);
+        product.name = updateProductDto.name;
+        product.stock = updateProductDto.stock;
+        product.price = updateProductDto.price;
+        product.detail = updateProductDto.detail;
+        product.image = updateProductDto.image;
+        product.status = updateProductDto.status;
 
-  async delete(id: string) {
-    const product = await this.findById(id);
-    product.deleted_at = generateUnixTimestamp();
-    await product.save();
-    return true;
-  }
+        return await product.save();
+    }
 
-  async removeOfStock(id: string, quantity: number) {
-    const product = await this.findById(id);
-    product.stock -= quantity;
-    await product.save();
-    return true;
-  }
+    async delete(id: string) {
+        const product = await this.findById(id);
+        product.deleted_at = generateUnixTimestamp();
+        await product.save();
+        return true;
+    }
 
-  getSafeParameters(product: Product): Product {
-    return {
-      ...product.toObject(),
-      stock: undefined,
-      status: undefined,
-      created_at: undefined,
-      updated_at: undefined,
-      deleted_at: undefined,
-    } as Product;
-  }
+    async changeStock(id: string, quantity: number, add: boolean) {
+        const product = await this.findById(id);
+        add ? product.stock += quantity : product.stock -= quantity;
+        await product.save();
+        return true;
+    }
+
+    getSafeParameters(product: Product): Product {
+        return {
+            ...product.toObject(),
+            stock: undefined,
+            status: undefined,
+            created_at: undefined,
+            updated_at: undefined,
+            deleted_at: undefined,
+        } as Product;
+    }
 }
