@@ -2602,7 +2602,7 @@
         "affectsGlobalScope": false
       },
       "../src/consts/app.roles.ts": {
-        "version": "c9f3e83439994add615302a16429f3f6b12497f998591f481ff50def5e286b17",
+        "version": "a3d5da48c4bc7ddf0d5aa2a9a2662207dc7b4f668070502f7a4e8096c13f7112",
         "signature": "2c1d44e7e3792e2ee853a85648b649dcc0832bd4ef6391a3dd23290bed92d9a0",
         "affectsGlobalScope": false
       },
@@ -4607,8 +4607,8 @@
         "affectsGlobalScope": false
       },
       "../src/modules/products/dto/create-product.dto.ts": {
-        "version": "95c5a9b5150b51eb6e979552132991265ea265ceb74ec58eed18fd850dc5a43c",
-        "signature": "9ae95f8e146097662e990e26267903b2d22c14b5593ea161b731c9d438c3a96f",
+        "version": "dd0b204c34749032d55fd4085b0bcf078a59b21a65d9689c3ed0d02a6fc91b7e",
+        "signature": "7482696970d936efdc154815187b6ff3b261fc4f0832b5f5eac00f0c58c689e3",
         "affectsGlobalScope": false
       },
       "../src/modules/products/dto/update-product.dto.ts": {
@@ -4622,8 +4622,8 @@
         "affectsGlobalScope": false
       },
       "../src/modules/products/products.service.ts": {
-        "version": "638bec3176082055729657700db7656f721e7a14cc4b4faa238d2d5167cdf68a",
-        "signature": "a80c43bc888aaba02dccd526827284c86c33367a3a2a0f196c2d1c63369a9657",
+        "version": "e0bea117ef187b6b38bd7de18cc5c77e1f6c6625fe82b2b68bdaed71d0c2a163",
+        "signature": "765215de9139fc4257e194b2daebd1d0e84613def77b40aed25e78f848ed8b5a",
         "affectsGlobalScope": false
       },
       "../src/modules/products/products.controller.ts": {
@@ -4847,7 +4847,7 @@
         "affectsGlobalScope": false
       },
       "../src/modules/shopping-carts/shopping-carts.service.ts": {
-        "version": "6f86e742bc073898288fd5902c507525d9713e0be0bed1a4ae3c01cbf5fc7eb3",
+        "version": "837e218fb5e9086e8316d0556dd8a97e5f01bc8fb2e890a17a747d16f6116632",
         "signature": "03648db5dd9930a2d38e5bf95c83b584a04618b0b2e9677ed1d06323a9d5fb04",
         "affectsGlobalScope": false
       },

@@ -12,13 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const class_validator_1 = require("class-validator");
 const uuid_1 = require("uuid");
 class CreateProductDto {
-    constructor(name, stock, price, detail, image) {
+    constructor(name, stock, price, detail, image, status) {
         this._id = uuid_1.v4();
         this.name = name;
         this.stock = stock;
         this.price = price;
         this.detail = detail;
         this.image = image;
+        this.status = status;
     }
 }
 __decorate([

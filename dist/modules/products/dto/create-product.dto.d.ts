@@ -9,5 +9,5 @@ export default class CreateProductDto {
     created_at: number;
     updated_at: number;
     deleted_at: number;
-    constructor(name: string, stock: number, price: number, detail: string, image: string);
+    constructor(name: string, stock: number, price: number, detail: string, image: string, status: boolean);
 }

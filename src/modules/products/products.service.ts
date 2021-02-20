@@ -1,15 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model } from 'mongoose';
+import {Injectable, NotFoundException} from '@nestjs/common';
+import {InjectModel} from '@nestjs/mongoose';
+import {FilterQuery, Model} from 'mongoose';
 import CreateProductDto from './dto/create-product.dto';
-import { generateUnixTimestamp } from '../../utils/generateUnixTimestamp';
+import {generateUnixTimestamp} from '../../utils/generateUnixTimestamp';
 import UpdateProductDto from './dto/update-product.dto';
-import { Product } from './schema/product.schema';
+import {Product} from './schema/product.schema';
 
 @Injectable()
 export class ProductsService {
   constructor(
-    @InjectModel(Product.name) private ProductModel: Model<Product>,
+      @InjectModel(Product.name) private ProductModel: Model<Product>,
   ) {
   }
 
@@ -36,6 +36,7 @@ export class ProductsService {
       createProductDto.price,
       createProductDto.detail,
       createProductDto.image,
+        createProductDto.status
     );
     return await this.ProductModel.create(newProduct);
   }
@@ -47,6 +48,7 @@ export class ProductsService {
     product.price = updateProductDto.price;
     product.detail = updateProductDto.detail;
     product.image = updateProductDto.image;
+    product.status = updateProductDto.status;
 
     return await product.save();
   }
@@ -54,6 +56,13 @@ export class ProductsService {
   async delete(id: string) {
     const product = await this.findById(id);
     product.deleted_at = generateUnixTimestamp();
+    await product.save();
+    return true;
+  }
+
+  async removeOfStock(id: string, quantity: number) {
+    const product = await this.findById(id);
+    product.stock -= quantity;
     await product.save();
     return true;
   }

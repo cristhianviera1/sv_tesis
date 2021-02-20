@@ -40,7 +40,7 @@ let ProductsService = class ProductsService {
         return this.ProductModel.find(conditions);
     }
     async create(createProductDto) {
-        const newProduct = new create_product_dto_1.default(createProductDto.name, createProductDto.stock, createProductDto.price, createProductDto.detail, createProductDto.image);
+        const newProduct = new create_product_dto_1.default(createProductDto.name, createProductDto.stock, createProductDto.price, createProductDto.detail, createProductDto.image, createProductDto.status);
         return await this.ProductModel.create(newProduct);
     }
     async update(updateProductDto) {
@@ -50,16 +50,32 @@ let ProductsService = class ProductsService {
         product.price = updateProductDto.price;
         product.detail = updateProductDto.detail;
         product.image = updateProductDto.image;
+        product.status = updateProductDto.status;
         return await product.save();
     }
+
     async delete(id) {
         const product = await this.findById(id);
         product.deleted_at = generateUnixTimestamp_1.generateUnixTimestamp();
         await product.save();
         return true;
     }
+
+    async removeOfStock(id, quantity) {
+        const product = await this.findById(id);
+        product.stock -= quantity;
+        await product.save();
+        return true;
+    }
+
     getSafeParameters(product) {
-        return Object.assign(Object.assign({}, product.toObject()), { stock: undefined, status: undefined, created_at: undefined, updated_at: undefined, deleted_at: undefined });
+        return Object.assign(Object.assign({}, product.toObject()), {
+            stock: undefined,
+            status: undefined,
+            created_at: undefined,
+            updated_at: undefined,
+            deleted_at: undefined
+        });
     }
 };
 ProductsService = __decorate([

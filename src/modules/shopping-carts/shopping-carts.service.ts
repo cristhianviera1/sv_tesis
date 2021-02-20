@@ -50,6 +50,9 @@ export class ShoppingCartsService {
     for (let i = 0; i < createShoppingCartDto.products.length; i++) {
       const productDetail = createShoppingCartDto.products[i];
       const productEntity = await this.productsService.findById(productDetail.productID);
+      if (productEntity.stock > productDetail.quantity) {
+        throw new ConflictException(`Lo sentimos no poseemos el suficiente stock de ${productEntity.name}`);
+      }
       productsDetail.push({
         product: {...this.productsService.getSafeParameters(productEntity), image: undefined} as Product,
         quantity: productDetail.quantity,
@@ -94,12 +97,17 @@ export class ShoppingCartsService {
       throw new ConflictException('No se puede actualizar el estado de entrega hasta que el comprobante del depósito haya sido verificado');
     }
     order.status.push(
-      generateStatusOrderModel(
-        updateShoppingCartStatus.status,
-        generateUnixTimestamp(),
-        `La transacción fue actualizada por: ${changedBy.name} ${changedBy.surname}. con email: ${changedBy.email}`,
-      ),
+        generateStatusOrderModel(
+            updateShoppingCartStatus.status,
+            generateUnixTimestamp(),
+            `La transacción fue actualizada por: ${changedBy.name} ${changedBy.surname}. con email: ${changedBy.email}`,
+        ),
     );
+    if (order.voucher.statuses[order.voucher.statuses.length - 1].status === 'aprobado') {
+      order.products.map((product) => {
+        this.productsService.removeOfStock(product.product._id, product.quantity);
+      })
+    }
     if (updateShoppingCartStatus.status === StatusTypeOrderEnum.CANCELED) {
       order.deleted_at = generateUnixTimestamp();
     }
