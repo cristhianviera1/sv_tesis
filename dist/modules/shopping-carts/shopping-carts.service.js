@@ -47,12 +47,12 @@ let ShoppingCartsService = class ShoppingCartsService {
             const productDetail = createShoppingCartDto.products[i];
             const productEntity = await this.productsService.findById(productDetail.productID);
             productsDetail.push({
-                product: this.productsService.getSafeParameters(productEntity),
+                product: Object.assign(Object.assign({}, this.productsService.getSafeParameters(productEntity)), { image: undefined }),
                 quantity: productDetail.quantity,
             });
             total += (productEntity.price * productDetail.quantity);
         }
-        const newShoppingCart = new create_shopping_cart_dto_1.CreateShoppingCartDto(this.usersService.getSafeParameters(user), productsDetail, shopping_cart_schema_1.generateStatusOrderModel(shopping_cart_schema_1.StatusTypeOrderEnum.WAITING_CONTACT, generateUnixTimestamp_1.generateUnixTimestamp()), {
+        const newShoppingCart = new create_shopping_cart_dto_1.CreateShoppingCartDto(Object.assign(Object.assign({}, this.usersService.getSafeParameters(user)), { image: undefined }), productsDetail, shopping_cart_schema_1.generateStatusOrderModel(shopping_cart_schema_1.StatusTypeOrderEnum.WAITING_CONTACT, generateUnixTimestamp_1.generateUnixTimestamp()), {
             statuses: [{
                     created_at: generateUnixTimestamp_1.generateUnixTimestamp(),
                     status: shopping_cart_schema_1.StatusVoucherEnum.WAIGTING_VAUCHER,

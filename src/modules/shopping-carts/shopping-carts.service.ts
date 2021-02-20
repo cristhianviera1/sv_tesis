@@ -1,5 +1,5 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
+import {InjectModel} from '@nestjs/mongoose';
 import {
   generateStatusOrderModel,
   ProductDetail,
@@ -7,22 +7,23 @@ import {
   StatusTypeOrderEnum,
   StatusVoucherEnum,
 } from './schema/shopping-cart.schema';
-import { FilterQuery, Model } from 'mongoose';
+import {FilterQuery, Model} from 'mongoose';
 import CreateShoppingCartRequestDto from './dto/create-shopping-cart-request.dto';
-import { UsersService } from '../users/users.service';
-import { ProductsService } from '../products/products.service';
-import { User } from '../users/schemas/user.schema';
-import { generateUnixTimestamp } from '../../utils/generateUnixTimestamp';
-import { CreateShoppingCartDto } from './dto/create-shopping-cart.dto';
+import {UsersService} from '../users/users.service';
+import {ProductsService} from '../products/products.service';
+import {User} from '../users/schemas/user.schema';
+import {generateUnixTimestamp} from '../../utils/generateUnixTimestamp';
+import {CreateShoppingCartDto} from './dto/create-shopping-cart.dto';
 import UpdateShoppingCartStatusDto from './dto/update-shopping-cart-status.dto';
 import UpdateVoucherStatusDto from './dto/update-voucher-status.dto';
+import {Product} from "../products/schema/product.schema";
 
 @Injectable()
 export class ShoppingCartsService {
   constructor(
-    @InjectModel(ShoppingCart.name)
-    private ShoppingCartModel: Model<ShoppingCart>,
-    private readonly usersService: UsersService,
+      @InjectModel(ShoppingCart.name)
+      private ShoppingCartModel: Model<ShoppingCart>,
+      private readonly usersService: UsersService,
     private readonly productsService: ProductsService,
   ) {
   }
@@ -50,23 +51,23 @@ export class ShoppingCartsService {
       const productDetail = createShoppingCartDto.products[i];
       const productEntity = await this.productsService.findById(productDetail.productID);
       productsDetail.push({
-        product: this.productsService.getSafeParameters(productEntity),
+        product: {...this.productsService.getSafeParameters(productEntity), image: undefined} as Product,
         quantity: productDetail.quantity,
       });
       total += (productEntity.price * productDetail.quantity);
     }
     const newShoppingCart = new CreateShoppingCartDto(
-      this.usersService.getSafeParameters(user),
-      productsDetail,
-      generateStatusOrderModel(
-        StatusTypeOrderEnum.WAITING_CONTACT,
-        generateUnixTimestamp(),
-      ),
-      {
-        statuses: [{
-          created_at: generateUnixTimestamp(),
-          status: StatusVoucherEnum.WAIGTING_VAUCHER,
-        }],
+        {...this.usersService.getSafeParameters(user), image: undefined} as User,
+        productsDetail,
+        generateStatusOrderModel(
+            StatusTypeOrderEnum.WAITING_CONTACT,
+            generateUnixTimestamp(),
+        ),
+        {
+          statuses: [{
+            created_at: generateUnixTimestamp(),
+            status: StatusVoucherEnum.WAIGTING_VAUCHER,
+          }],
       },
       total,
     );

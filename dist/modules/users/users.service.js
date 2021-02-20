@@ -48,11 +48,9 @@ let UsersService = class UsersService {
         this.User = User;
         this.mailerService = mailerService;
     }
-
     async list(condition, start = 0, items = 20) {
         return this.User.find(condition).skip(start).limit(items);
     }
-
     async createClient(createClientUserDto) {
         if (await this.existingEmail(createClientUserDto === null || createClientUserDto === void 0 ? void 0 : createClientUserDto.email)) {
             throw new common_1.ConflictException('Ya existe un usuario con ese correo electrónico.');
@@ -63,7 +61,6 @@ let UsersService = class UsersService {
         this.mailerService.sendMail(createClientUserDto.email, mailer_message_1.PasswordSubject, `${mailer_message_1.PasswordHtml} <br/><p>${mailer_message_1.PasswordBody(generatedPassword)}</p>`);
         return createdUser.save();
     }
-
     async create(createUserDto) {
         if (await this.existingEmail(createUserDto === null || createUserDto === void 0 ? void 0 : createUserDto.email)) {
             throw new common_1.ConflictException('Ya existe un usuario con ese correo electrónico.');

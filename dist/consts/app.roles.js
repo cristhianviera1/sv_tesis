@@ -6,10 +6,38 @@ const create_user_dto_1 = require("../modules/users/dto/create-user.dto");
 exports.roles = new nest_access_control_1.RolesBuilder();
 exports.roles
     .grant(create_user_dto_1.UserTypeEnum.ADMIN)
-    .createAny(['users', 'branchOffices', 'employees', 'newness', 'products', 'shopping-carts'])
-    .deleteAny(['users', 'branchOffices', 'employees', 'newness', 'products', 'shopping-carts'])
-    .readAny(['users', 'branchOffices', 'employees', 'newness', 'products', 'shopping-carts'])
-    .updateAny(['users', 'branchOffices', 'employees', 'newness', 'products', 'shopping-carts'])
+    .createAny([
+    'users',
+    'branchOffices',
+    'employees',
+    'newness',
+    'products',
+    'shopping-carts',
+])
+    .deleteAny([
+    'users',
+    'branchOffices',
+    'employees',
+    'newness',
+    'products',
+    'shopping-carts',
+])
+    .readAny([
+    'users',
+    'branchOffices',
+    'employees',
+    'newness',
+    'products',
+    'shopping-carts',
+])
+    .updateAny([
+    'users',
+    'branchOffices',
+    'employees',
+    'newness',
+    'products',
+    'shopping-carts',
+])
     .grant(create_user_dto_1.UserTypeEnum.BRANCH_ADMIN)
     .updateOwn(['users', 'branchOffices'])
     .readOwn(['users', 'branchOffices'])
@@ -18,11 +46,11 @@ exports.roles
     .deleteAny(['products', 'shopping-carts'])
     .deleteOwn(['users', 'branchOffices'])
     .grant(create_user_dto_1.UserTypeEnum.BRIGADISTA)
-    .createOwn(['users', 'chat'])
-    .updateOwn(['users', 'chat'])
-    .readOwn(['users', 'chat'])
+    .createOwn(['users', 'chat', 'shopping-carts'])
+    .updateOwn(['users', 'chat', 'shopping-carts'])
+    .readOwn(['users', 'chat', 'shopping-carts'])
     .readAny(['products', 'newness', 'branchOffices'])
-    .deleteOwn(['users', 'chat'])
+    .deleteOwn(['users', 'chat', 'shopping-carts'])
     .grant(create_user_dto_1.UserTypeEnum.CLIENT)
     .createOwn(['users', 'shopping-carts', 'chat'])
     .deleteOwn(['users', 'shopping-carts', 'chat'])
