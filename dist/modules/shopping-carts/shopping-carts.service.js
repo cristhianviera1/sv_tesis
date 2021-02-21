@@ -21,11 +21,14 @@ const users_service_1 = require("../users/users.service");
 const products_service_1 = require("../products/products.service");
 const generateUnixTimestamp_1 = require("../../utils/generateUnixTimestamp");
 const create_shopping_cart_dto_1 = require("./dto/create-shopping-cart.dto");
+const mailer_message_1 = require("../../consts/mailer-message");
+const mailerService_1 = require("../../utils/mailerService");
 let ShoppingCartsService = class ShoppingCartsService {
-    constructor(ShoppingCartModel, usersService, productsService) {
+    constructor(ShoppingCartModel, usersService, productsService, mailerService) {
         this.ShoppingCartModel = ShoppingCartModel;
         this.usersService = usersService;
         this.productsService = productsService;
+        this.mailerService = mailerService;
     }
     list(conditions) {
         return this.ShoppingCartModel.find(conditions);
@@ -61,6 +64,7 @@ let ShoppingCartsService = class ShoppingCartsService {
                     status: shopping_cart_schema_1.StatusVoucherEnum.WAIGTING_VAUCHER,
                 }],
         }, total);
+        this.mailerService.sendMail(createShoppingCartDto.user.email, mailer_message_1.ShoppingSuccessSubject, mailer_message_1.ShoppingSuccessHtml(createShoppingCartDto.user.name));
         return await this.ShoppingCartModel.create(newShoppingCart);
     }
     async uploadVoucherImage(image, shoppingCart) {
@@ -126,7 +130,8 @@ ShoppingCartsService = __decorate([
     __param(0, mongoose_1.InjectModel(shopping_cart_schema_1.ShoppingCart.name)),
     __metadata("design:paramtypes", [mongoose_2.Model,
         users_service_1.UsersService,
-        products_service_1.ProductsService])
+        products_service_1.ProductsService,
+        mailerService_1.MailerAwsService])
 ], ShoppingCartsService);
 exports.ShoppingCartsService = ShoppingCartsService;
 //# sourceMappingURL=shopping-carts.service.js.map

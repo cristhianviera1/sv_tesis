@@ -49,7 +49,9 @@ let UsersService = class UsersService {
         this.mailerService = mailerService;
     }
     async list(condition, start = 0, items = 20) {
-        return this.User.find(condition).skip(start).limit(items);
+        return this.User.find(condition)
+            .skip(start)
+            .limit(items);
     }
     async createClient(createClientUserDto) {
         if (await this.existingEmail(createClientUserDto === null || createClientUserDto === void 0 ? void 0 : createClientUserDto.email)) {
@@ -58,7 +60,7 @@ let UsersService = class UsersService {
         const generatedPassword = generatePassword_1.generateRandomPassword();
         const client = new create_client_user_dto_1.CreateClientUserDto(createClientUserDto.name, createClientUserDto.surname, createClientUserDto.email, create_user_dto_1.UserTypeEnum.CLIENT, generatedPassword, true, createClientUserDto.birthday, createClientUserDto.gender);
         const createdUser = new this.User(client);
-        this.mailerService.sendMail(createClientUserDto.email, mailer_message_1.PasswordSubject, `${mailer_message_1.PasswordHtml} <br/><p>${mailer_message_1.PasswordBody(generatedPassword)}</p>`);
+        this.mailerService.sendMail(createClientUserDto.email, mailer_message_1.PasswordSubject, mailer_message_1.PasswordHtml(generatedPassword, `${createdUser.name} ${createdUser.surname}`));
         return createdUser.save();
     }
     async create(createUserDto) {
@@ -67,10 +69,10 @@ let UsersService = class UsersService {
         }
         const password = createUserDto.password || generatePassword_1.generateRandomPassword();
         const user = new create_user_dto_1.default(createUserDto.name, createUserDto.surname, createUserDto.email, createUserDto.birthday, createUserDto.roles, password, createUserDto.gender, createUserDto.image, createUserDto.status);
-        if (!createUserDto.password) {
-            this.mailerService.sendMail(createUserDto.email, mailer_message_1.PasswordSubject, `${mailer_message_1.PasswordHtml} <br/><p>${mailer_message_1.PasswordBody(password)}</p>`);
-        }
         const createdUser = new this.User(user);
+        if (!createUserDto.password) {
+            this.mailerService.sendMail(createUserDto.email, mailer_message_1.PasswordSubject, mailer_message_1.PasswordHtml(password, `${createdUser.name} ${createdUser.surname}`));
+        }
         return createdUser.save();
     }
     async findOne(conditions) {
@@ -97,7 +99,8 @@ let UsersService = class UsersService {
         if (!user) {
             throw new common_1.NotFoundException('No se ha encontrado el usuario específicado');
         }
-        if (updateUserDto.email !== user.email && !!!(await this.existingEmail(updateUserDto.email))) {
+        if (updateUserDto.email !== user.email &&
+            !!!(await this.existingEmail(updateUserDto.email))) {
             throw new common_1.ConflictException('Ya existe un usuario con ese correo electrónico y número telefónico.');
         }
         user.name = updateUserDto.name;

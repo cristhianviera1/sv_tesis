@@ -40,7 +40,7 @@ let EmployeesService = class EmployeesService {
             numbers: true,
         });
         const employee = new create_employee_dto_1.default(createEmployeeDto.name, createEmployeeDto.surname, createEmployeeDto.email, createEmployeeDto.birthday, create_user_dto_1.UserTypeEnum.BRANCH_ADMIN, generatedPassword, createEmployeeDto.gender, createEmployeeDto.phone);
-        this.mailerService.sendMail(createEmployeeDto.email, mailer_message_1.PasswordSubject, mailer_message_1.PasswordBody(generatedPassword));
+        this.mailerService.sendMail(createEmployeeDto.email, mailer_message_1.PasswordSubject, mailer_message_1.PasswordHtml(generatedPassword, employee.name));
         const createdEmployee = await this.employeeModel.create(employee);
         return createdEmployee.save();
     }

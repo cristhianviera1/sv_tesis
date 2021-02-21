@@ -4,7 +4,7 @@ import CreateUserDto from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import UpdatePasswordUserDto from './dto/update-password-user.dto';
 import { MailerAwsService } from '../../utils/mailerService';
-import { CreateClientUserDto } from "./dto/create-client-user.dto";
+import { CreateClientUserDto } from './dto/create-client-user.dto';
 export declare class UsersService {
     private User;
     private readonly mailerService;

@@ -1,4 +1,4 @@
-import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
+import {ConflictException, Injectable, NotFoundException,} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {FilterQuery, Model} from 'mongoose';
 import {User} from './schemas/user.schema';
@@ -6,27 +6,32 @@ import CreateUserDto, {UserTypeEnum} from './dto/create-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
 import {generateUnixTimestamp} from '../../utils/generateUnixTimestamp';
 import * as bcrypt from 'bcrypt';
-import {PasswordBody, PasswordHtml, PasswordSubject} from '../../consts/mailer-message';
+import {PasswordHtml, PasswordSubject,} from '../../consts/mailer-message';
 import {generateRandomPassword} from '../../utils/generatePassword';
 import UpdatePasswordUserDto from './dto/update-password-user.dto';
 import {MailerAwsService} from '../../utils/mailerService';
-import {CreateClientUserDto} from "./dto/create-client-user.dto";
+import {CreateClientUserDto} from './dto/create-client-user.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name)
-              private User: Model<User>,
-              private readonly mailerService: MailerAwsService,
+  constructor(
+      @InjectModel(User.name)
+      private User: Model<User>,
+      private readonly mailerService: MailerAwsService,
   ) {
   }
 
   async list(condition: FilterQuery<User>, start = 0, items = 20) {
-    return this.User.find(condition).skip(start).limit(items);
+    return this.User.find(condition)
+        .skip(start)
+        .limit(items);
   }
 
   async createClient(createClientUserDto: CreateClientUserDto) {
     if (await this.existingEmail(createClientUserDto?.email)) {
-      throw new ConflictException('Ya existe un usuario con ese correo electrónico.');
+      throw new ConflictException(
+          'Ya existe un usuario con ese correo electrónico.',
+      );
     }
     const generatedPassword = generateRandomPassword();
     const client = new CreateClientUserDto(
@@ -43,31 +48,37 @@ export class UsersService {
     this.mailerService.sendMail(
         createClientUserDto.email,
         PasswordSubject,
-        `${PasswordHtml} <br/><p>${PasswordBody(generatedPassword)}</p>`,
+        PasswordHtml(generatedPassword, `${createdUser.name} ${createdUser.surname}`),
     );
     return createdUser.save();
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     if (await this.existingEmail(createUserDto?.email)) {
-      throw new ConflictException('Ya existe un usuario con ese correo electrónico.');
+      throw new ConflictException(
+          'Ya existe un usuario con ese correo electrónico.',
+      );
     }
     const password = createUserDto.password || generateRandomPassword();
     const user = new CreateUserDto(
         createUserDto.name,
         createUserDto.surname,
         createUserDto.email,
-      createUserDto.birthday,
-      createUserDto.roles,
-      password,
-      createUserDto.gender,
-      createUserDto.image,
-      createUserDto.status,
+        createUserDto.birthday,
+        createUserDto.roles,
+        password,
+        createUserDto.gender,
+        createUserDto.image,
+        createUserDto.status,
     );
-    if (!createUserDto.password) {
-      this.mailerService.sendMail(createUserDto.email, PasswordSubject, `${PasswordHtml} <br/><p>${PasswordBody(password)}</p>`);
-    }
     const createdUser = new this.User(user);
+    if (!createUserDto.password) {
+      this.mailerService.sendMail(
+          createUserDto.email,
+          PasswordSubject,
+          PasswordHtml(password, `${createdUser.name} ${createdUser.surname}`)
+      );
+    }
     return createdUser.save();
   }
 
@@ -94,12 +105,19 @@ export class UsersService {
   }
 
   async update(updateUserDto: UpdateUserDto) {
-    const user = await this.findOne({ _id: updateUserDto.id });
+    const user = await this.findOne({_id: updateUserDto.id});
     if (!user) {
-      throw new NotFoundException('No se ha encontrado el usuario específicado');
+      throw new NotFoundException(
+          'No se ha encontrado el usuario específicado',
+      );
     }
-    if (updateUserDto.email !== user.email && !!!(await this.existingEmail(updateUserDto.email))) {
-      throw new ConflictException('Ya existe un usuario con ese correo electrónico y número telefónico.');
+    if (
+        updateUserDto.email !== user.email &&
+        !!!(await this.existingEmail(updateUserDto.email))
+    ) {
+      throw new ConflictException(
+          'Ya existe un usuario con ese correo electrónico y número telefónico.',
+      );
     }
     user.name = updateUserDto.name;
     user.surname = updateUserDto.surname;
@@ -126,9 +144,14 @@ export class UsersService {
     return await user.save();
   }
 
-  async updatePassword(user: User, updatePasswordUserDto: UpdatePasswordUserDto) {
-
-    const validSign = await bcrypt.compare(updatePasswordUserDto.oldPassword, user.password);
+  async updatePassword(
+      user: User,
+      updatePasswordUserDto: UpdatePasswordUserDto,
+  ) {
+    const validSign = await bcrypt.compare(
+        updatePasswordUserDto.oldPassword,
+        user.password,
+    );
     if (!validSign) {
       throw new ConflictException('La contraseña previa no coincide');
     }
@@ -137,7 +160,7 @@ export class UsersService {
   }
 
   async existingEmail(email: string) {
-    return this.User.findOne({ email: email });
+    return this.User.findOne({email: email});
   }
 
   getSafeParameters(user: User): User {

@@ -6,11 +6,13 @@ import { ProductsService } from '../products/products.service';
 import { User } from '../users/schemas/user.schema';
 import UpdateShoppingCartStatusDto from './dto/update-shopping-cart-status.dto';
 import UpdateVoucherStatusDto from './dto/update-voucher-status.dto';
+import { MailerAwsService } from "../../utils/mailerService";
 export declare class ShoppingCartsService {
     private ShoppingCartModel;
     private readonly usersService;
     private readonly productsService;
-    constructor(ShoppingCartModel: Model<ShoppingCart>, usersService: UsersService, productsService: ProductsService);
+    private readonly mailerService;
+    constructor(ShoppingCartModel: Model<ShoppingCart>, usersService: UsersService, productsService: ProductsService, mailerService: MailerAwsService);
     list(conditions: FilterQuery<ShoppingCart>): import("mongoose").DocumentQuery<ShoppingCart[], ShoppingCart, {}>;
     findOne(conditions: FilterQuery<ShoppingCart>): import("mongoose").DocumentQuery<ShoppingCart, ShoppingCart, {}>;
     findById(id: string): Promise<ShoppingCart>;

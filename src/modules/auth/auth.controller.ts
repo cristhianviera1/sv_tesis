@@ -16,7 +16,7 @@ import {AuthService} from './auth.service';
 import {SignInDto} from './dto/sign-in.dto';
 import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
 import {CreateClientUserDto} from '../users/dto/create-client-user.dto';
-import {PasswordBody, PasswordRecoverSubject, PassworReceiverdHtml,} from 'src/consts/mailer-message';
+import {PasswordRecoverHtml, PasswordRecoverSubject,} from 'src/consts/mailer-message';
 import {generateRandomPassword} from '../../utils/generatePassword';
 import {MailerAwsService} from '../../utils/mailerService';
 
@@ -69,9 +69,9 @@ export class AuthController {
     const userEmail = email.toLocaleLowerCase().trim();
     const user = await this.userService.findOne({ email: userEmail });
     this.mailerService.sendMail(
-      userEmail,
-      PasswordRecoverSubject,
-      `${PassworReceiverdHtml} <br/><p>${PasswordBody(generatedPassword)}</p>`,
+        userEmail,
+        PasswordRecoverSubject,
+        PasswordRecoverHtml(generatedPassword),
     );
     user.password = generatedPassword;
     return true;

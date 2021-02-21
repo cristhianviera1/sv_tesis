@@ -17,6 +17,8 @@ import {CreateShoppingCartDto} from './dto/create-shopping-cart.dto';
 import UpdateShoppingCartStatusDto from './dto/update-shopping-cart-status.dto';
 import UpdateVoucherStatusDto from './dto/update-voucher-status.dto';
 import {Product} from "../products/schema/product.schema";
+import {ShoppingSuccessHtml, ShoppingSuccessSubject} from "../../consts/mailer-message";
+import {MailerAwsService} from "../../utils/mailerService";
 
 @Injectable()
 export class ShoppingCartsService {
@@ -24,7 +26,8 @@ export class ShoppingCartsService {
       @InjectModel(ShoppingCart.name)
       private ShoppingCartModel: Model<ShoppingCart>,
       private readonly usersService: UsersService,
-    private readonly productsService: ProductsService,
+      private readonly productsService: ProductsService,
+      private readonly mailerService: MailerAwsService,
   ) {
   }
 
@@ -71,8 +74,13 @@ export class ShoppingCartsService {
             created_at: generateUnixTimestamp(),
             status: StatusVoucherEnum.WAIGTING_VAUCHER,
           }],
-      },
-      total,
+        },
+        total,
+    );
+    this.mailerService.sendMail(
+        createShoppingCartDto.user.email,
+        ShoppingSuccessSubject,
+        ShoppingSuccessHtml(createShoppingCartDto.user.name),
     );
     return await this.ShoppingCartModel.create(newShoppingCart);
   }

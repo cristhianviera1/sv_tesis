@@ -1,22 +1,22 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { User } from '../users/schemas/user.schema';
-import { Model } from 'mongoose';
+import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
+import {InjectModel} from '@nestjs/mongoose';
+import {User} from '../users/schemas/user.schema';
+import {Model} from 'mongoose';
 import UpdateEmployeeDto from './dto/udpate-employee.dto';
 import CreateEmployeeUserDto from './dto/create-employee.dto';
-import { UserTypeEnum } from '../users/dto/create-user.dto';
-import { generateUnixTimestamp } from '../../utils/generateUnixTimestamp';
-import { UsersService } from '../users/users.service';
+import {UserTypeEnum} from '../users/dto/create-user.dto';
+import {generateUnixTimestamp} from '../../utils/generateUnixTimestamp';
+import {UsersService} from '../users/users.service';
 import generator from 'generate-password';
-import { PasswordBody, PasswordSubject } from 'src/consts/mailer-message';
-import { MailerAwsService } from '../../utils/mailerService';
+import {PasswordHtml, PasswordSubject} from 'src/consts/mailer-message';
+import {MailerAwsService} from '../../utils/mailerService';
 
 @Injectable()
 export class EmployeesService {
   constructor(
-    @InjectModel(User.name) private employeeModel: Model<User>,
-    private readonly usersService: UsersService,
-    private readonly mailerService: MailerAwsService,
+      @InjectModel(User.name) private employeeModel: Model<User>,
+      private readonly usersService: UsersService,
+      private readonly mailerService: MailerAwsService,
   ) {
   }
 
@@ -36,7 +36,7 @@ export class EmployeesService {
       createEmployeeDto.gender,
       createEmployeeDto.phone,
     );
-    this.mailerService.sendMail(createEmployeeDto.email, PasswordSubject, PasswordBody(generatedPassword));
+    this.mailerService.sendMail(createEmployeeDto.email, PasswordSubject, PasswordHtml(generatedPassword, employee.name));
     const createdEmployee = await this.employeeModel.create(employee);
     return createdEmployee.save();
   }
