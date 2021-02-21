@@ -64,7 +64,7 @@ let ShoppingCartsService = class ShoppingCartsService {
                     status: shopping_cart_schema_1.StatusVoucherEnum.WAIGTING_VAUCHER,
                 }],
         }, total);
-        this.mailerService.sendMail(createShoppingCartDto.user.email, mailer_message_1.ShoppingSuccessSubject, mailer_message_1.ShoppingSuccessHtml(createShoppingCartDto.user.name));
+        this.mailerService.sendMail(user.email, mailer_message_1.ShoppingSuccessSubject, mailer_message_1.ShoppingSuccessHtml(user.name));
         return await this.ShoppingCartModel.create(newShoppingCart);
     }
     async uploadVoucherImage(image, shoppingCart) {

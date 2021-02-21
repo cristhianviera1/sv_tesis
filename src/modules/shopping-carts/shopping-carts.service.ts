@@ -78,9 +78,9 @@ export class ShoppingCartsService {
         total,
     );
     this.mailerService.sendMail(
-        createShoppingCartDto.user.email,
+        user.email,
         ShoppingSuccessSubject,
-        ShoppingSuccessHtml(createShoppingCartDto.user.name),
+        ShoppingSuccessHtml(user.name),
     );
     return await this.ShoppingCartModel.create(newShoppingCart);
   }

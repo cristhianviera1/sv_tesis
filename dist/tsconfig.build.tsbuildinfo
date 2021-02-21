@@ -4862,7 +4862,7 @@
         "affectsGlobalScope": false
       },
       "../src/modules/shopping-carts/shopping-carts.service.ts": {
-        "version": "fe61257320d5b027639224e445fc8cc9fa0f5f8996271e201ad82cf8e4e1d487",
+        "version": "4c4be17b357b313072b82cfa98a1455305aa76d249d2cd6526f9b57f3e60cf50",
         "signature": "070096302477d3f9042e998593afbda0c68373b53e1cdf5cf75b1a6c446e541a",
         "affectsGlobalScope": false
       },
