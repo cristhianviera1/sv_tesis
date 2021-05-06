@@ -111,7 +111,7 @@ export class ShoppingCartsController {
     action: 'delete',
     possession: 'any',
   })
-  @Delete('id')
+  @Delete(':id')
   async deleteShoppingCart(@Param('id') id: string, @Request() req) {
     const shoppingCart = await this.shoppingCartsService.findById(id);
     const user = await this.usersService.findById(req?.user?._id);

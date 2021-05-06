@@ -169,7 +169,7 @@ __decorate([
         action: 'delete',
         possession: 'any',
     }),
-    common_1.Delete('id'),
+    common_1.Delete(':id'),
     __param(0, common_1.Param('id')), __param(1, common_1.Request()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
