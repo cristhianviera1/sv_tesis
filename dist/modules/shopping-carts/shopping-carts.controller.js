@@ -35,7 +35,7 @@ let ShoppingCartsController = class ShoppingCartsController {
     }
     myShoppingCart(req) {
         var _a;
-        return this.shoppingCartsService.list({ 'user._id': (_a = req === null || req === void 0 ? void 0 : req.user) === null || _a === void 0 ? void 0 : _a._id });
+        return this.shoppingCartsService.list({ 'user._id': (_a = req === null || req === void 0 ? void 0 : req.user) === null || _a === void 0 ? void 0 : _a._id, deleted_at: null });
     }
     async create(req, cartRequestDto) {
         var _a;

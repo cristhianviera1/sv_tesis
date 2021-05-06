@@ -35,7 +35,7 @@ export class ShoppingCartsController {
   })
   @Get('me')
   myShoppingCart(@Request() req) {
-    return this.shoppingCartsService.list({ 'user._id': req?.user?._id });
+    return this.shoppingCartsService.list({ 'user._id': req?.user?._id, deleted_at: null});
   }
 
   @UseGuards(JwtAuthGuard, ACGuard)

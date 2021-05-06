@@ -4872,7 +4872,7 @@
         "affectsGlobalScope": false
       },
       "../src/modules/shopping-carts/shopping-carts.controller.ts": {
-        "version": "20786cc40dba8e5769ac7dfa68d2e8d5b7f963dcae8132f67d7b371abf669b2c",
+        "version": "cec085acedd2d8f30332d38c83f10a49a838c22dac15158b65d0d6d487bb8710",
         "signature": "3895cd7d390c68164493ab0ed0281a09820cf14b80bb8b4bc22d3077863cd27e",
         "affectsGlobalScope": false
       },
