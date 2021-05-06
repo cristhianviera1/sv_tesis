@@ -16,4 +16,5 @@ export declare class ShoppingCartsController {
     find(id: string): Promise<import("./schema/shopping-cart.schema").ShoppingCart>;
     uploadVoucherImage(id: string, uploadShoppingCartImageDto: UploadShoppingCartImageDto): Promise<import("./schema/shopping-cart.schema").ShoppingCart>;
     updateVoucherStatus(id: string, req: any, updateVoucherStatusDto: UpdateVoucherStatusDto): Promise<import("./schema/shopping-cart.schema").ShoppingCart>;
+    deleteShoppingCart(id: string, req: any): Promise<import("./schema/shopping-cart.schema").ShoppingCart>;
 }

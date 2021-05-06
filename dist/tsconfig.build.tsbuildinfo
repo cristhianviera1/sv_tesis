@@ -4862,8 +4862,8 @@
         "affectsGlobalScope": false
       },
       "../src/modules/shopping-carts/shopping-carts.service.ts": {
-        "version": "4c4be17b357b313072b82cfa98a1455305aa76d249d2cd6526f9b57f3e60cf50",
-        "signature": "070096302477d3f9042e998593afbda0c68373b53e1cdf5cf75b1a6c446e541a",
+        "version": "011f728de2ef7cadd46be11ee1a4c39df864e9370d8084260ee409d409aa9ee0",
+        "signature": "2cb8fbe4a3ef8432258621aeb99a7042538027a6d173798a80ee8655c1cbd93f",
         "affectsGlobalScope": false
       },
       "../src/modules/shopping-carts/dto/upload-shopping-cart-image.dto.ts": {
@@ -4872,8 +4872,8 @@
         "affectsGlobalScope": false
       },
       "../src/modules/shopping-carts/shopping-carts.controller.ts": {
-        "version": "c6ae6092ac00bfe6180fb2f978144a679ddd47003b224ac7ff742d55eefee448",
-        "signature": "7a7930a28d042f1bc090e7e8978fc47c99a3a8045eae3000dacd64eac277aa3a",
+        "version": "01fc4cbc3795f467d64cd206c6286fd291594e4b9517b54373e4756af5c8b869",
+        "signature": "3895cd7d390c68164493ab0ed0281a09820cf14b80bb8b4bc22d3077863cd27e",
         "affectsGlobalScope": false
       },
       "../src/modules/shopping-carts/shopping-carts.module.ts": {

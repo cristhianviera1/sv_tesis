@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Request, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards, ValidationPipe } from '@nestjs/common';
 import { ShoppingCartsService } from './shopping-carts.service';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { ACGuard, UseRoles } from 'nest-access-control';
@@ -103,5 +103,18 @@ export class ShoppingCartsController {
       return await this.shoppingCartsService.updateDeliveryStatus(user, shoppingCart, updateVoucherStatusDto);
     }
     return await this.shoppingCartsService.updateVoucherStatus(user, shoppingCart, updateVoucherStatusDto);
+  }
+
+  @UseGuards(JwtAuthGuard, ACGuard)
+  @UseRoles({
+    resource: 'shopping-carts',
+    action: 'delete',
+    possession: 'any',
+  })
+  @Delete('id')
+  async deleteShoppingCart(@Param('id') id: string, @Request() req) {
+    const shoppingCart = await this.shoppingCartsService.findById(id);
+    const user = await this.usersService.findById(req?.user?._id);
+    return await this.shoppingCartsService.deleteShoppingCart(user, shoppingCart);
   }
 }

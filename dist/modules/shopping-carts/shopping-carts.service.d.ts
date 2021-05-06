@@ -21,4 +21,5 @@ export declare class ShoppingCartsService {
     updateStatus(changedBy: User, cart_id: string, updateShoppingCartStatus: UpdateShoppingCartStatusDto): Promise<ShoppingCart>;
     updateVoucherStatus(changedBy: User, shoppingCart: ShoppingCart, updateVoucherStatusDto: UpdateVoucherStatusDto): Promise<ShoppingCart>;
     updateDeliveryStatus(changedBy: User, shoppingCart: ShoppingCart, updateVoucherStatusDto: UpdateVoucherStatusDto): Promise<ShoppingCart>;
+    deleteShoppingCart(changedBy: User, shoppingCart: ShoppingCart): Promise<ShoppingCart>;
 }

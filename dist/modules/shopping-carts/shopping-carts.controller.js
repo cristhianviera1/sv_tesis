@@ -63,6 +63,12 @@ let ShoppingCartsController = class ShoppingCartsController {
         }
         return await this.shoppingCartsService.updateVoucherStatus(user, shoppingCart, updateVoucherStatusDto);
     }
+    async deleteShoppingCart(id, req) {
+        var _a;
+        const shoppingCart = await this.shoppingCartsService.findById(id);
+        const user = await this.usersService.findById((_a = req === null || req === void 0 ? void 0 : req.user) === null || _a === void 0 ? void 0 : _a._id);
+        return await this.shoppingCartsService.deleteShoppingCart(user, shoppingCart);
+    }
 };
 __decorate([
     common_1.UseGuards(jwt_auth_guard_1.JwtAuthGuard, nest_access_control_1.ACGuard),
@@ -156,6 +162,19 @@ __decorate([
     __metadata("design:paramtypes", [String, Object, update_voucher_status_dto_1.default]),
     __metadata("design:returntype", Promise)
 ], ShoppingCartsController.prototype, "updateVoucherStatus", null);
+__decorate([
+    common_1.UseGuards(jwt_auth_guard_1.JwtAuthGuard, nest_access_control_1.ACGuard),
+    nest_access_control_1.UseRoles({
+        resource: 'shopping-carts',
+        action: 'delete',
+        possession: 'any',
+    }),
+    common_1.Delete('id'),
+    __param(0, common_1.Param('id')), __param(1, common_1.Request()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], ShoppingCartsController.prototype, "deleteShoppingCart", null);
 ShoppingCartsController = __decorate([
     common_1.Controller('shopping-carts'),
     __metadata("design:paramtypes", [shopping_carts_service_1.ShoppingCartsService,

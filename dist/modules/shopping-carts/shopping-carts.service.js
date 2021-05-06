@@ -93,7 +93,7 @@ let ShoppingCartsService = class ShoppingCartsService {
         return await order.save();
     }
     async updateVoucherStatus(changedBy, shoppingCart, updateVoucherStatusDto) {
-        const canUpdate = shoppingCart.voucher.statuses.some((status) => status.status === shopping_cart_schema_1.StatusVoucherEnum.DENIED || status.status === shopping_cart_schema_1.StatusVoucherEnum.APPROVED);
+        const canUpdate = shoppingCart.voucher.statuses.some((status) => status.status === shopping_cart_schema_1.StatusVoucherEnum.APPROVED);
         if (canUpdate) {
             throw new common_1.ConflictException(`El comprobante de pago ya ha sido ${updateVoucherStatusDto.status}`);
         }
@@ -122,6 +122,12 @@ let ShoppingCartsService = class ShoppingCartsService {
             }
         }
         shoppingCart.markModified('status');
+        return await shoppingCart.save();
+    }
+    async deleteShoppingCart(changedBy, shoppingCart) {
+        shoppingCart.deleted_at = generateUnixTimestamp_1.generateUnixTimestamp();
+        shoppingCart.status.push(Object.assign({}, shopping_cart_schema_1.generateStatusOrderModel(shopping_cart_schema_1.StatusTypeOrderEnum.CANCELED, generateUnixTimestamp_1.generateUnixTimestamp(), `Actualizado por ${changedBy.name} ${changedBy.surname} con email: ${changedBy.email}`)));
+        shoppingCart.markModified("status");
         return await shoppingCart.save();
     }
 };

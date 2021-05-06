@@ -120,7 +120,7 @@ export class ShoppingCartsService {
 
   async updateVoucherStatus(changedBy: User, shoppingCart: ShoppingCart, updateVoucherStatusDto: UpdateVoucherStatusDto) {
     const canUpdate = shoppingCart.voucher.statuses.some((status) =>
-        status.status === StatusVoucherEnum.DENIED || status.status === StatusVoucherEnum.APPROVED,
+        status.status === StatusVoucherEnum.APPROVED
     );
     if (canUpdate) {
       throw new ConflictException(`El comprobante de pago ya ha sido ${updateVoucherStatusDto.status}`);
@@ -157,6 +157,19 @@ export class ShoppingCartsService {
       }
     }
     shoppingCart.markModified('status');
+    return await shoppingCart.save();
+  }
+
+  async deleteShoppingCart(changedBy: User, shoppingCart: ShoppingCart) {
+    shoppingCart.deleted_at = generateUnixTimestamp();
+    shoppingCart.status.push({
+      ...generateStatusOrderModel(
+        StatusTypeOrderEnum.CANCELED,
+        generateUnixTimestamp(),
+        `Actualizado por ${changedBy.name} ${changedBy.surname} con email: ${changedBy.email}`,
+      ),
+    })
+    shoppingCart.markModified("status");
     return await shoppingCart.save();
   }
 }
