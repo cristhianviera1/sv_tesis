@@ -24,7 +24,7 @@ export class ShoppingCartsController {
   })
   @Get()
   async list() {
-    return this.shoppingCartsService.list({});
+    return this.shoppingCartsService.list({deleted_at:null});
   }
 
   @UseGuards(JwtAuthGuard, ACGuard)

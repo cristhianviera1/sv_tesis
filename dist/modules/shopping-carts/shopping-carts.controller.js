@@ -31,7 +31,7 @@ let ShoppingCartsController = class ShoppingCartsController {
         this.usersService = usersService;
     }
     async list() {
-        return this.shoppingCartsService.list({});
+        return this.shoppingCartsService.list({ deleted_at: null });
     }
     myShoppingCart(req) {
         var _a;
