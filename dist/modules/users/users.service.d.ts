@@ -19,6 +19,7 @@ export declare class UsersService {
     updateStatus(user: User, status: boolean): Promise<User>;
     updateImage(user: User, image: string): Promise<User>;
     updatePassword(user: User, updatePasswordUserDto: UpdatePasswordUserDto): Promise<User>;
+    recoveryPassword(updateUser: User): Promise<User>;
     existingEmail(email: string): Promise<User>;
     getSafeParameters(user: User): User;
 }

@@ -159,6 +159,12 @@ export class UsersService {
     return user.save();
   }
 
+  async recoveryPassword(updateUser: User) {
+    const user = await this.findOne({_id: updateUser.id});
+    user.password = bcrypt.hashSync(updateUser.password, 10);
+    return await user.save();
+  }
+
   async existingEmail(email: string) {
     return this.User.findOne({email: email});
   }

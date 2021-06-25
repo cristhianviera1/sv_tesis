@@ -74,7 +74,7 @@ export class AuthController {
         PasswordRecoverHtml(generatedPassword),
     );
     user.password = generatedPassword;
-    return true;
+    return await this.userService.recoveryPassword(user);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -59,7 +59,7 @@ let AuthController = class AuthController {
         const user = await this.userService.findOne({ email: userEmail });
         this.mailerService.sendMail(userEmail, mailer_message_1.PasswordRecoverSubject, mailer_message_1.PasswordRecoverHtml(generatedPassword));
         user.password = generatedPassword;
-        return true;
+        return await this.userService.recoveryPassword(user);
     }
     async getMe(req) {
         var _a;

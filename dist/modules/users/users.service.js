@@ -133,6 +133,11 @@ let UsersService = class UsersService {
         user.password = bcrypt.hashSync(updatePasswordUserDto.newPassword, 10);
         return user.save();
     }
+    async recoveryPassword(updateUser) {
+        const user = await this.findOne({ _id: updateUser.id });
+        user.password = bcrypt.hashSync(updateUser.password, 10);
+        return await user.save();
+    }
     async existingEmail(email) {
         return this.User.findOne({ email: email });
     }

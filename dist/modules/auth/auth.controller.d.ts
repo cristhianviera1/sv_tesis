@@ -14,6 +14,6 @@ export declare class AuthController {
         accessToken: string;
     }>;
     signUp(createClientUserDto: CreateClientUserDto): Promise<import("../users/schemas/user.schema").User>;
-    recoverPass(email: string): Promise<boolean>;
+    recoverPass(email: string): Promise<import("../users/schemas/user.schema").User>;
     getMe(req: any): Promise<import("../users/schemas/user.schema").User>;
 }
